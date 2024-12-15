@@ -21,7 +21,4 @@ This project is a User Management System built with PHP, MySQL, jQuery, Bootstra
 
 ### Installing
 
-1. **Clone the Repository** (or download the project folder):
-
-   ```bash
-   git clone https://your-repository-url.git
+  **Clone the Repository** (or download the project folder):
