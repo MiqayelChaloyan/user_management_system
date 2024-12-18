@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     // Initialize context menu
     $.contextMenu({
-        selector: '#users tbody tr',
+        selector: '#users tbody tr, #users_report tbody tr',
         callback: function (key) {
             if (!globalPermissions) {
                 Swal.fire('Error', 'Permissions not loaded.', 'error');
@@ -39,7 +39,14 @@ $(document).ready(function () {
                 if (globalPermissions.can_update === 'Yes') {
                     window.location.href = "process/update-user.php?id=" + userId;
                 } else {
-                    Swal.fire('Warning', 'No update permission.', 'warning');
+                    Swal.fire({
+                        title: 'Warning',
+                        text: 'No update permission.',
+                        icon: 'warning',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true 
+                    });                
                 }
             } else if (key === 'remove') {
                 if (globalPermissions.can_remove === 'Yes') {
@@ -82,7 +89,14 @@ $(document).ready(function () {
                         }
                     });
                 } else {
-                    Swal.fire('Warning', 'No remove permission.', 'warning');
+                    Swal.fire({
+                        title: 'Warning',
+                        text: 'No remove permission.',
+                        icon: 'warning',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
                 }
             }
         },
@@ -92,15 +106,13 @@ $(document).ready(function () {
         }
     });
 
-    // Store selected row for context menu
-    $('#users tbody').on('contextmenu', 'tr', function () {
+    // Store selected row for context menu (works for both #users and #users_report)
+    $('#users tbody, #users_report tbody').on('contextmenu', 'tr', function () {
         selectedRow = $(this);
     });
 
-
-    
-    // Update and Remove Button Actions with Permissions
-    $('#users tbody').on('click', '.update-btn', function (event) {
+    // Update and Remove Button Actions with Permissions (works for both #users and #users_report)
+    $('#users tbody, #users_report tbody').on('click', '.update-btn', function (event) {
         event.preventDefault();
         
         if (!globalPermissions) {
@@ -112,7 +124,14 @@ $(document).ready(function () {
         if (globalPermissions.can_update === 'Yes') {
             window.location.href = "process/update-user.php?id=" + userId;
         } else {
-            Swal.fire('Warning', 'No update permission.', 'warning');
+            Swal.fire({
+                title: 'Warning',
+                text: 'No update permission.',
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true 
+            });   
         }
     });
 
@@ -167,7 +186,14 @@ $(document).ready(function () {
                 }
             });
         } else {
-            Swal.fire('Warning', 'No remove permission.', 'warning');
+            Swal.fire({
+                title: 'Warning',
+                text: 'No remove permission.',
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
         }
     });
 });

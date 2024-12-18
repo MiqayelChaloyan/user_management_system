@@ -1,0 +1,62 @@
+/* Fullscreen Modal */
+.modal-fullscreen {
+    max-width: 90%;
+    width: 90%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.modal-body {
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.modal-content {
+    height: 90%;
+    border: none;
+}
+
+.scroll-content {
+    height: auto;
+}
+
+.custom-width {
+    width: 200px;
+}
+
+/* DataTable Export Buttons */
+.dt-buttons .btn {
+    font-size: 19px;
+    padding: 10px;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Custom colors for each export button */
+.dt-buttons .btn.copy {
+    color: #3b9f3b; /* Green for copy */
+}
+
+.dt-buttons .btn.csv {
+    color: #ff9900; /* Orange for CSV */
+}
+
+.dt-buttons .btn.excel {
+    color: #1c5f98; /* Blue for Excel */
+}
+
+.dt-buttons .btn.pdf {
+    color: #d32f2f; /* Red for PDF */
+}
+
+.dt-buttons .btn.print {
+    color: #1976d2; /* Blue for Print */
+}
+
+.dt-buttons .btn:hover {
+    opacity: 0.8;
+}

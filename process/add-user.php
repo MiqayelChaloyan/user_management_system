@@ -105,7 +105,7 @@
 
             function submitForm() {
                 NProgress.start();
-                var data = $("#user_form").serialize();
+                let data = $("#user_form").serialize();
                 $.ajax({
                     type: 'POST',
                     url: '../actions/create.php',

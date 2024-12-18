@@ -138,8 +138,8 @@ if (isset($_GET['id'])) {
 
             function submitForm() {
                 NProgress.start();
-                var data = $("#user_form_update").serialize();
-                var userId = $("#submit_button").data('user-id');
+                let data = $("#user_form_update").serialize();
+                let userId = $("#submit_button").data('user-id');
                 data += "&user_id=" + userId;
 
                 $.ajax({
