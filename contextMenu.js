@@ -120,7 +120,7 @@ $(document).ready(function () {
             return;
         }
 
-        const userId = $(this).closest('tr').data('id');
+        const userId = $(this).closest('tr').data('id'); // tr > td > x-class
         if (globalPermissions.can_update === 'Yes') {
             window.location.href = "process/update-user.php?id=" + userId;
         } else {
