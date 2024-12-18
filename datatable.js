@@ -4,6 +4,6 @@ $(document).ready(function () {
         searching: true,
         ordering: true,
         info: true,
-        lengthChange: false
+        pageLength: 50 
     });
 });

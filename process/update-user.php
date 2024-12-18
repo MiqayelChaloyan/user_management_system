@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
         <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
             <div class="card-body">
                 <h1 class="text-center text-primary mb-4">Update Form</h1>
-                <form id="user_form_update" action="process/update-user.php" method="POST">
+                <form id="user_form_update" method="POST">
                     <div class="mb-3">
                         <label for="full_name" class="form-label">
                             Full Name
@@ -115,87 +115,87 @@ if (isset($_GET['id'])) {
     </div>
 
     <script>
-    $(document).ready(function() {
-        // TODO: Add validation for specific input types like phone number and email format
-        $("#user_form_update").validate({
-            rules: {
-                full_name: {
-                    required: true,
+        $(document).ready(function() {
+            // TODO: Add validation for specific input types like phone number and email format
+            $("#user_form_update").validate({
+                rules: {
+                    full_name: {
+                        required: true,
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    phone_number: {
+                        required: true,
+                    },
+                    country: {
+                        required: true,
+                    }
                 },
-                email: {
-                    required: true,
-                    email: true,
-                },
-                phone_number: {
-                    required: true,
-                },
-                country: {
-                    required: true,
-                }
-            },
-            submitHandler: submitForm
-        });
+                submitHandler: submitForm
+            });
 
-        function submitForm() {
-            NProgress.start();
-            var data = $("#user_form_update").serialize();
-            var userId = $("#submit_button").data('user-id');
-            data += "&user_id=" + userId;
+            function submitForm() {
+                NProgress.start();
+                var data = $("#user_form_update").serialize();
+                var userId = $("#submit_button").data('user-id');
+                data += "&user_id=" + userId;
 
-            $.ajax({
-                type: 'POST',
-                url: '../actions/update.php',
-                data: data,
-                dataType: 'json',
-                success: function(data) {
-                    NProgress.done();
-                    if (data.status === 200) {
-                        toastr.options = { positionClass: 'toast-top-right' };
-                        toastr.success(data.message);
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'User updated successfully!',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 1500 
-                        }).then(() => {
-                            setTimeout(function() {
-                                window.location.href = "../index.php";
-                            }, 1500);
-                        });
-                    } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '../actions/update.php',
+                    data: data,
+                    dataType: 'json',
+                    success: function(data) {
+                        NProgress.done();
+                        if (data.status === 200) {
+                            toastr.options = { positionClass: 'toast-top-right' };
+                            toastr.success(data.message);
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'User updated successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500 
+                            }).then(() => {
+                                setTimeout(function() {
+                                    window.location.href = "../index.php";
+                                }, 1500);
+                            });
+                        } else {
+                            Swal.fire({
+                                title: '',
+                                text: data.message,
+                                icon: 'error',
+                                showConfirmButton: false,
+                                timer: 1500 
+                            }).then(() => {
+                                setTimeout(function() {
+                                    window.location.href = "../index.php";
+                                }, 1500);
+                            });
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        NProgress.done();
                         Swal.fire({
                             title: '',
-                            text: data.message,
+                            text: 'An error occurred, please try again.',
                             icon: 'error',
                             showConfirmButton: false,
-                            timer: 1500 
+                            timer: 1500,
                         }).then(() => {
                             setTimeout(function() {
                                 window.location.href = "../index.php";
                             }, 1500);
                         });
                     }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    NProgress.done();
-                    Swal.fire({
-                        title: '',
-                        text: 'An error occurred, please try again.',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 1500,
-                    }).then(() => {
-                        setTimeout(function() {
-                            window.location.href = "../index.php";
-                        }, 1500);
-                    });
-                }
-            });
-            return false;
-        }
-    });
-</script>
+                });
+                return false;
+            }
+        });
+    </script>
 
 </body>
 </html>
