@@ -65,3 +65,7 @@ td.details-control {
 tr.shown td.details-control {
     background: url('https://infra.clarin.eu/content/Centre_Registry/libs/DataTables-1.10.6/examples/resources/details_close.png') no-repeat center center;
 }
+
+table.dataTable td.dt-control:before {
+    display: none !important;
+}
