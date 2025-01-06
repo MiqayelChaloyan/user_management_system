@@ -49,6 +49,7 @@ include 'includes/db.php';
             <!-- <label><input type="checkbox" name="pos" value="male"> Male</label>
             <label><input type="checkbox" name="pos" value="female"> Female</label> -->
         </div>
+        <a href="generate_pdf.php" class="btn btn-success btn-md" id="generatePdfBtn">Generate PDF</a>
 
 
 
@@ -92,7 +93,10 @@ include 'includes/db.php';
                         <button class="btn btn-danger btn-sm delete-btn" data-id="<?= $row['id'] ?>">
                             <i class="fa fa-trash"></i>
                         </button>
-                    </td>
+                        <a href="generate_user_pdf.php?user_id=<?php echo $row['id']; ?>" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-pdf"></i>
+                        </a>
+                        </td>
                 </tr>
                 <?php endwhile; endif; ?>
             </tbody>
@@ -164,13 +168,14 @@ include 'includes/db.php';
 
             $(document).ready(function () {
                 const table = $('#users').DataTable({
-                    dom: 'Bfrtip',
-        paging: true,
-        searching: true,
-        ordering: true,
-        info: true,
-        pageLength: 50,
-        lengthChange: true,
+                    stateSave: true,  // Add this line
+    dom: 'Bfrtip',
+    paging: true,
+    searching: true,
+    ordering: true,
+    info: true,
+    pageLength: 50,
+    lengthChange: true,
                     buttons: [
                         {
                             extend: 'copy',
@@ -216,23 +221,22 @@ include 'includes/db.php';
                     order: [[1, 'asc']],
                 })
 
-                // TODO: Implement the child row toggle functionality for showing more data on click
                 $('#users tbody').on('click', 'td:first-child', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-                    var userId = tr.data('id'); // Get the user ID
+    var tr = $(this).closest('tr');
+    var row = table.row(tr);
+    var userId = tr.data('id'); // Get the user ID
 
-                    if (row.child.isShown()) {
-                        row.child.hide();
-                        tr.removeClass('shown');
-                    } else {
-                        // Fetch additional data from the database via AJAX
-                        fetchChildRowData(userId, function(data) {
-                            row.child(format(data)).show();
-                            tr.addClass('shown');
-                        });
-                    }
-                });
+    if (row.child.isShown()) {
+        row.child.hide();
+        tr.removeClass('shown');
+    } else {
+        // Fetch additional data from the database via AJAX
+        fetchChildRowData(userId, function(data) {
+            row.child(format(data)).show();
+            tr.addClass('shown');
+        });
+    }
+});
 
 
 
@@ -240,6 +244,31 @@ include 'includes/db.php';
                 $('#users tbody').on('contextmenu', '.btn', function (e) {
                     e.stopPropagation();
                 }); 
+
+
+
+
+        document.getElementById('generatePdfBtn').addEventListener('click', function() {
+            var userId = getUserId(); // This should return the actual user ID
+            this.href = 'generate_user_pdf.php?user_id=' + userId;
+        });
+
+        $('#generatePdfBtn').on('click', function () {
+        // Trigger the AJAX request to generate the PDF
+        $.ajax({
+            url: 'generate_pdf.php',
+            method: 'POST',  // Using POST to pass data securely
+            data: { generate: true },  // Send a flag to generate the PDF
+            success: function (response) {
+                // If the PDF is generated successfully, handle the response (e.g., download)
+                // Assuming the response contains the file URL or direct output
+                window.location.href = response; // Redirect to the generated PDF
+            },
+            error: function () {
+                alert('Error generating the PDF');
+            }
+        });
+    });
             });
     </script>
 </body>
