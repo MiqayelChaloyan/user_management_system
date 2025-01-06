@@ -45,8 +45,8 @@ $(document).ready(function () {
                         icon: 'warning',
                         showConfirmButton: false,
                         timer: 3000,
-                        timerProgressBar: true 
-                    });                
+                        timerProgressBar: true
+                    });
                 }
             } else if (key === 'remove') {
                 if (globalPermissions.can_remove === 'Yes') {
@@ -66,7 +66,7 @@ $(document).ready(function () {
                                 url: 'process/delete-user.php',
                                 data: { id: userId },
                                 dataType: 'json',
-                                success: function(data) {
+                                success: function (data) {
                                     if (data.status === 200) {
                                         Swal.fire({
                                             title: 'Deleted!',
@@ -82,7 +82,7 @@ $(document).ready(function () {
                                         Swal.fire('Error!', data.message, 'error');
                                     }
                                 },
-                                error: function(xhr, status, error) {
+                                error: function (xhr, status, error) {
                                     Swal.fire('Error!', 'There was an error deleting the user.', 'error');
                                 }
                             });
@@ -114,7 +114,7 @@ $(document).ready(function () {
     // Update and Remove Button Actions with Permissions (works for both #users and #users_report)
     $('#users tbody, #users_report tbody').on('click', '.update-btn', function (event) {
         event.preventDefault();
-        
+
         if (!globalPermissions) {
             Swal.fire('Error', 'Permissions not loaded.', 'error');
             return;
@@ -130,8 +130,8 @@ $(document).ready(function () {
                 icon: 'warning',
                 showConfirmButton: false,
                 timer: 3000,
-                timerProgressBar: true 
-            });   
+                timerProgressBar: true
+            });
         }
     });
 
@@ -143,57 +143,74 @@ $(document).ready(function () {
             return;
         }
 
-        const userId = $(this).data('id');
-        const selectedRow = $(this).closest('tr'); // Find the closest <tr> (row) to the clicked button
+        $(document).on('click', '.delete-user', function () {
+            const userId = $(this).data('id'); // Get the user ID from the button's data attribute
+            const selectedRow = $(this).closest('tr'); // Find the closest <tr> to the clicked button
 
-        if (globalPermissions.can_remove === 'Yes') {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to undo this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'process/delete-user.php',
-                        data: { id: userId },
-                        dataType: 'json',
-                        success: function (data) {
-                            if (data.status === 200) {
-                                Swal.fire({
-                                    title: 'Deleted!',
-                                    text: data.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    timerProgressBar: true
-                                }).then(() => {
-                                    selectedRow.remove(); // Remove the row from the table
-                                });
-                            } else {
-                                Swal.fire('Error!', data.message, 'error');
+            // Locate the nested child table if it exists
+            const selectedDetailsRow = selectedRow.next('tr').find('#details-user');
+
+            // Check global permissions
+            if (globalPermissions.can_remove === 'Yes') {
+                // Show confirmation dialog using SweetAlert2
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to undo this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Send AJAX request to delete the user
+                        $.ajax({
+                            type: 'POST',
+                            url: 'process/delete-user.php',
+                            data: { id: userId },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.status === 200) {
+                                    // Show success message and remove the row
+                                    Swal.fire({
+                                        title: 'Deleted!',
+                                        text: data.message,
+                                        icon: 'success',
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                        timerProgressBar: true
+                                    }).then(() => {
+                                        // Check if child table exists and remove it
+                                        if (selectedDetailsRow.length) {
+                                            selectedDetailsRow.remove();
+                                        }
+                                        // Remove the parent row
+                                        selectedRow.remove();
+                                    });
+                                } else {
+                                    // Show error message from server
+                                    Swal.fire('Error!', data.message, 'error');
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle AJAX errors
+                                Swal.fire('Error!', 'There was an error deleting the user.', 'error');
                             }
-                        },
-                        error: function (xhr, status, error) {
-                            Swal.fire('Error!', 'There was an error deleting the user.', 'error');
-                        }
-                    });
-                }
-            });
-        } else {
-            Swal.fire({
-                title: 'Warning',
-                text: 'No remove permission.',
-                icon: 'warning',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true
-            });
-        }
+                        });
+                    }
+                });
+            } else {
+                // Show warning if no permission to remove
+                Swal.fire({
+                    title: 'Warning',
+                    text: 'No remove permission.',
+                    icon: 'warning',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            }
+        });
     });
 });

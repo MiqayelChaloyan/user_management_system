@@ -1,39 +1,35 @@
 <?php
 include '../includes/db.php';
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+header('Content-Type: application/json');
 
 $response = [];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $userId = (int) $_POST['id'];
 
+    // Delete queries
+    $deleteDetailsQuery = "DELETE FROM user_details WHERE user_id = $userId";
     $deleteQuery = "DELETE FROM users WHERE id = $userId";
 
-    if (mysqli_query($conn, $deleteQuery)) {
+    if (mysqli_query($conn, $deleteDetailsQuery) && mysqli_query($conn, $deleteQuery)) {
         $response = [
             'status' => 200,
-            'message' => 'User deleted successfully.'
+            'message' => 'User and related details deleted successfully.'
         ];
-        http_response_code(200);
     } else {
         $response = [
             'status' => 500,
-            'message' => 'Error deleting user.'
+            'message' => 'Failed to delete user: ' . mysqli_error($conn)
         ];
-        http_response_code(500);
     }
 } else {
     $response = [
         'status' => 400,
-        'message' => 'Invalid request.'
+        'message' => 'Invalid request or missing user ID.'
     ];
-    http_response_code(400);
 }
 
 echo json_encode($response);
 mysqli_close($conn);
-exit;
 ?>

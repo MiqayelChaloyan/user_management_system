@@ -9,50 +9,53 @@ include 'includes/db.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management System</title>
+    
     <!-- TODO: Include DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    
     <!-- TODO: Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
     <!-- TODO: Include jQuery ContextMenu CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+    
     <!-- TODO: Css for DataTable File export -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
+    
     <!-- TODO: Uncomment if needed -->
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.dataTables.css"> -->
-
+    
     <!-- TODO: Include Font Awesome for icons -->
-    <link rel="stylesheet" type="text/css" href="css/index.css?v=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 </head>
 
 <body>
     <div class="container mt-5">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
             <h2 class="mb-4">Users List</h2>
             <div class='mb-2'>
-                <!-- TODO: Add User Button -->
                 <a class="btn btn-primary btn-md" href="process/add-user.php">Add User</a>
-                <!-- TODO: Report Modal Button -->
                 <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#fullscreenModal">
                     Report
                 </button>
             </div>
         </div>
 
-        <!-- TODO: Include report PHP file -->
-        <?php include 'report.php' ?>
+        <?php include 'report.php'; ?>
 
         <div id="position">
-            <!-- TODO: Add radio buttons for Age and Gender filter -->
-            <input type="radio" name="pos" value="Age" id="age">Age
-            <input type="radio" name="gender" id="male" value="Male"> Male
-            <input type="radio" name="gender" id="female" value="Female"> Female
+            <!-- <label><input type="checkbox" name="pos" value="age"> Age</label> -->
+            <!-- <label><input type="checkbox" name="pos" value="male"> Male</label>
+            <label><input type="checkbox" name="pos" value="female"> Female</label> -->
         </div>
+
+
 
         <table id="users" class="table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th>ID</th>
                     <th>Full Name</th>
                     <th>Email</th>
@@ -65,45 +68,42 @@ include 'includes/db.php';
             </thead>
             <tbody>
                 <?php
-                $userQuery = "SELECT id, full_name, email, phone_number, country FROM users";
-                $userResult = mysqli_query($conn, $userQuery);
+                $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.country, d.age, d.gender 
+                          FROM users u
+                          LEFT JOIN user_details d ON u.id = d.user_id";
+                $result = mysqli_query($conn, $query);
 
-                if ($userResult && mysqli_num_rows($userResult) > 0):
-                    while ($user = mysqli_fetch_assoc($userResult)):
-                        $detailsQuery = "SELECT age, gender FROM user_details WHERE user_id = " . $user['id'];
-                        $detailsResult = mysqli_query($conn, $detailsQuery);
-                        $details = mysqli_fetch_assoc($detailsResult);
+                if ($result && mysqli_num_rows($result) > 0):
+                    while ($row = mysqli_fetch_assoc($result)):
                 ?>
-                <tr data-id="<?php echo $user['id'] ?>">
-                    <td><?= $user['id'] ?></td>
-                    <td><?= $user['full_name'] ?></td>
-                    <td><?= $user['email'] ?></td>
-                    <td><?= $user['phone_number'] ?></td>
-                    <td><?= $user['country'] ?></td>
-                    <td><?= $details['age'] ?? 'N/A' ?></td>
-                    <td><?= $details['gender'] ?? 'N/A' ?></td>
+                <tr data-id="<?php echo $row['id'] ?>">
+                    <td class="details-control"></td>
+                    <td><?php echo $row['id'] ?></td>
+                    <td><?php echo $row['full_name'] ?></td>
+                    <td><?php echo $row['email'] ?></td>
+                    <td><?php echo $row['phone_number'] ?></td>
+                    <td><?php echo $row['country'] ?></td>
+                    <td><?php echo $row['age'] ?? 'N/A' ?></td>
+                    <td><?php echo $row['gender'] ?? 'N/A' ?></td>
                     <td>
-                        <!-- TODO: Add Update Button with correct link -->
-                        <a name='Update' href="process/update-user.php?id=<?php $user['id'] ?>" class="mx-1 btn btn-primary btn-sm update-btn">
-                            <i class="fa fa-exchange"></i>
+                        <a href="process/update-user.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
+                            <i class="fa fa-edit"></i>
                         </a>
-
-                        <!-- TODO: Add Remove Button with delete logic -->
-                        <button name='Remove' class="mx-1 btn btn-danger btn-sm delete-btn" data-id="<?php $user['id'] ?>">
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="<?= $row['id'] ?>">
                             <i class="fa fa-trash"></i>
                         </button>
                     </td>
                 </tr>
-                <?php
-                    endwhile;
-                endif;
-                ?>
+                <?php endwhile; endif; ?>
             </tbody>
         </table>
     </div>
 
-    <!-- TODO: Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- TODO: Context Menu -->
+    <script src="contextMenu.js"></script>
+
+ <!-- TODO: Include jQuery -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- TODO: Include DataTables JS -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     <!-- TODO: Include Bootstrap JS -->
@@ -124,97 +124,123 @@ include 'includes/db.php';
     <script type='text/javascript' src='https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js'></script>
     <script type='text/javascript' src='https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js'></script>
 
-    <!-- TODO: Context Menu -->
-    <script src="contextMenu.js"></script>
-
     <script>
-        $(document).ready(function () {
-            const table = $('#users').DataTable({
-                paging: true,
-                searching: true,
-                ordering: true,
-                info: true,
-                pageLength: 50,
-                lengthChange: true,
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'copy',
-                        className: 'btn copy',
-                        text: '<i class="fa fa-copy"></i>',
-                        exportOptions: {
-                            columns: ':not(:first-child):not(:last-child)'
-                        }
+            function fetchChildRowData(userId, callback) {
+                $.ajax({
+                    url: './process/get-user-details.php',
+                    method: 'GET',
+                    data: { user_id: userId },
+                    success: function(response) {
+                        callback(response);
                     },
-                    {
-                        extend: 'csv',
-                        className: 'btn csv',
-                        text: '<i class="fa fa-file-csv"></i>',
-                        exportOptions: {
-                            columns: ':not(:first-child):not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'btn excel',
-                        text: '<i class="fa fa-file-excel"></i>',
-                        exportOptions: {
-                            columns: ':not(:first-child):not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'btn pdf',
-                        text: '<i class="fa fa-file-pdf"></i>',
-                        exportOptions: {
-                            columns: ':not(:first-child):not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        className: 'btn print',
-                        text: '<i class="fa fa-print"></i>',
-                        exportOptions: {
-                            columns: ':not(:first-child):not(:last-child)'
-                        }
+                    error: function() {
+                        callback('Error fetching data');
                     }
-                ]
-            });
-
-            // TODO: Handle changes in the radio buttons (Age, Male, Female)
-            $('input:radio[name="pos"]').on('change', function () {
-                var selectedValue = $(this).val();
-
-                if (selectedValue === 'Age') {
-                    $('#min-age, #max-age').show(); 
-                    table.column(6).search('').draw(); // Clear gender filter when Age is selected
-
-                    table.order([5, 'asc']).draw(); // Sort by Age column
-                } else {
-                    $('#min-age, #max-age').hide(); 
-                    table.column(5).search('').draw(); // Clear age filter
-
-                    table.column(6).search(selectedValue, true, false).draw(); // Gender filter
-                }
-            });
-
-            // TODO: Gender filter logic for radio buttons
-            $('input:radio[name="gender"]').on('change', function() {
-            var selectedGender = $(this).val();
-
-            if (selectedGender) {
-                table.column(6).search('^' + selectedGender + '$', true, false).draw();
-            } else {
-                table.column(6).search('').draw();
+                });
             }
+
+            function format(d) {
+                // TODO: Handle undefined or null values gracefully using ternary operator
+                return ` 
+                    <table id='details-user' cellpadding="5" cellspacing="0" border="0" style="padding-left:50px; width: 100%">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Info</th>
+                                <th>Job</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td>${new Date(d.dob).toLocaleString() || 'N/A'}</td>
+                            <td>${d.age || 'N/A'}</td>
+                            <td>${d.gender || 'N/A'}</td>
+                            <td>${d.info || 'N/A'}</td>
+                            <td>${d.job || 'N/A'}</td>
+                        </tbody>
+                    </table>`;
+            }
+
+            $(document).ready(function () {
+                const table = $('#users').DataTable({
+                    dom: 'Bfrtip',
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        pageLength: 50,
+        lengthChange: true,
+                    buttons: [
+                        {
+                            extend: 'copy',
+                            className: 'btn copy',
+                            text: '<i class="fa fa-copy"></i>',
+                            exportOptions: {
+                                columns: ':not(:first-child):not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'csv',
+                            className: 'btn csv',
+                            text: '<i class="fa fa-file-csv"></i>',
+                            exportOptions: {
+                                columns: ':not(:first-child):not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'btn excel',
+                            text: '<i class="fa fa-file-excel"></i>',
+                            exportOptions: {
+                                columns: ':not(:first-child):not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            className: 'btn pdf',
+                            text: '<i class="fa fa-file-pdf"></i>',
+                            exportOptions: {
+                                columns: ':not(:first-child):not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            className: 'btn print',
+                            text: '<i class="fa fa-print"></i>',
+                            exportOptions: {
+                                columns: ':not(:first-child):not(:last-child)'
+                            }
+                        }
+                    ],
+                    order: [[1, 'asc']],
+                })
+
+                // TODO: Implement the child row toggle functionality for showing more data on click
+                $('#users tbody').on('click', 'td:first-child', function () {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+                    var userId = tr.data('id'); // Get the user ID
+
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        // Fetch additional data from the database via AJAX
+                        fetchChildRowData(userId, function(data) {
+                            row.child(format(data)).show();
+                            tr.addClass('shown');
+                        });
+                    }
+                });
+
+
+
+                // TODO: Prevent context menu from opening on the action buttons
+                $('#users tbody').on('contextmenu', '.btn', function (e) {
+                    e.stopPropagation();
+                }); 
             });
-
-            // TODO: Prevent context menu from opening on the action buttons
-            $('#users tbody').on('contextmenu', '.btn', function (e) {
-                e.stopPropagation();
-            }); 
-        });
     </script>
-
 </body>
 </html>

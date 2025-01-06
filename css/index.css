@@ -53,3 +53,15 @@
     display: inline-flex;
     align-items: center;
 }
+
+
+
+
+
+td.details-control {
+    background: url('https://infra.clarin.eu/content/Centre_Registry/libs/DataTables-1.10.6/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('https://infra.clarin.eu/content/Centre_Registry/libs/DataTables-1.10.6/examples/resources/details_close.png') no-repeat center center;
+}
