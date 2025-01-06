@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,7 @@
     <!-- SweetAlert2 (TODO: Make sure SweetAlert2 is the preferred method for alerts, or consider alternatives) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body class="bg-light">
     <div class="d-flex justify-content-center align-items-center min-vh-100">
         <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
@@ -29,49 +31,45 @@
                         <label for="full_name" class="form-label">
                             Full Name
                         </label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             class="form-control"
                             id="full_name"
-                            name="full_name" 
-                            required
-                        >
+                            name="full_name"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">
                             Email
                         </label>
-                        <input 
-                            type="email" 
+                        <input
+                            type="email"
                             class="form-control"
                             id="email"
                             name="email"
-                            required
-                        >
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number" class="form-label">
                             Phone Number
                         </label>
-                        <input 
-                            type="text" 
-                            class="form-control" 
+                        <input
+                            type="text"
+                            class="form-control"
                             id="phone_number"
                             name="phone_number"
-                            required
-                         >
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="country" class="form-label">
                             Country
                         </label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             class="form-control"
                             id="country"
                             name="country"
-                            required
-                        >
+                            required>
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary w-50" id="submit_button">Submit</button>
@@ -80,7 +78,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         $(document).ready(function() {
             // TODO: Update validation rules if more fields are added in the future
@@ -113,7 +111,7 @@
                     dataType: 'json',
                     success: function(data, textStatus, jqXHR) {
                         NProgress.done();
-                        
+
                         if (jqXHR.status === 200 && data.status === 200) {
                             toastr.options = {
                                 positionClass: 'toast-top-right'
@@ -145,7 +143,7 @@
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        NProgress.done();                    
+                        NProgress.done();
                         let errorMessage = 'An error occurred, please try again.';
                         if (jqXHR.status === 500) {
                             errorMessage = 'Server error occurred. Please try again later.';
@@ -171,4 +169,5 @@
         });
     </script>
 </body>
+
 </html>

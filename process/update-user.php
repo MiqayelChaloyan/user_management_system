@@ -26,6 +26,7 @@ if (isset($_GET['id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,6 +43,7 @@ if (isset($_GET['id'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
+
 <body class="bg-light">
     <div class="d-flex justify-content-center align-items-center min-vh-100">
         <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
@@ -52,59 +54,55 @@ if (isset($_GET['id'])) {
                         <label for="full_name" class="form-label">
                             Full Name
                         </label>
-                        <input 
-                            type="text" 
-                            class="form-control" 
+                        <input
+                            type="text"
+                            class="form-control"
                             id="full_name"
-                            name="full_name" 
-                            value="<?= $full_name ?>" 
-                            required
-                         >
+                            name="full_name"
+                            value="<?= $full_name ?>"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">
                             Email
                         </label>
-                        <input 
-                            type="email" 
-                            class="form-control" 
+                        <input
+                            type="email"
+                            class="form-control"
                             id="email"
                             name="email"
                             value="<?= $email ?>"
-                            required
-                        >
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number" class="form-label">
-                            Phone Number   
+                            Phone Number
                         </label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             class="form-control"
                             id="phone_number"
                             name="phone_number"
                             value="<?= $phone_number ?>"
-                            required
-                        >
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="country" class="form-label">
                             Country
                         </label>
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            id="country" 
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="country"
                             name="country"
-                            value="<?= $country ?>" 
-                            required
-                        >
+                            value="<?= $country ?>"
+                            required>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button 
-                            type="submit" 
-                            class="btn btn-primary w-50" 
-                            id="submit_button" 
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-50"
+                            id="submit_button"
                             data-user-id="<?= $user_id ?>">
                             Submit
                         </button>
@@ -150,14 +148,16 @@ if (isset($_GET['id'])) {
                     success: function(data) {
                         NProgress.done();
                         if (data.status === 200) {
-                            toastr.options = { positionClass: 'toast-top-right' };
+                            toastr.options = {
+                                positionClass: 'toast-top-right'
+                            };
                             toastr.success(data.message);
                             Swal.fire({
                                 title: 'Success',
                                 text: 'User updated successfully!',
                                 icon: 'success',
                                 showConfirmButton: false,
-                                timer: 1500 
+                                timer: 1500
                             }).then(() => {
                                 setTimeout(function() {
                                     window.location.href = "../index.php";
@@ -169,7 +169,7 @@ if (isset($_GET['id'])) {
                                 text: data.message,
                                 icon: 'error',
                                 showConfirmButton: false,
-                                timer: 1500 
+                                timer: 1500
                             }).then(() => {
                                 setTimeout(function() {
                                     window.location.href = "../index.php";
@@ -198,4 +198,5 @@ if (isset($_GET['id'])) {
     </script>
 
 </body>
+
 </html>

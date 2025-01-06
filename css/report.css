@@ -38,23 +38,28 @@
 
 /* Custom colors for each export button */
 .dt-buttons .btn.copy {
-    color: #3b9f3b; /* Green for copy */
+    color: #3b9f3b;
+    /* Green for copy */
 }
 
 .dt-buttons .btn.csv {
-    color: #ff9900; /* Orange for CSV */
+    color: #ff9900;
+    /* Orange for CSV */
 }
 
 .dt-buttons .btn.excel {
-    color: #1c5f98; /* Blue for Excel */
+    color: #1c5f98;
+    /* Blue for Excel */
 }
 
 .dt-buttons .btn.pdf {
-    color: #d32f2f; /* Red for PDF */
+    color: #d32f2f;
+    /* Red for PDF */
 }
 
 .dt-buttons .btn.print {
-    color: #1976d2; /* Blue for Print */
+    color: #1976d2;
+    /* Blue for Print */
 }
 
 .dt-buttons .btn:hover {

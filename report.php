@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
 
   <link rel="stylesheet" type="text/css" href="css/report.css?v=2.0">
 
 </head>
+
 <body>
 
   <!-- Fullscreen Modal -->
@@ -40,13 +42,13 @@
             <table id="users_report" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Country</th>
-                    <th>Age</th>
-                    <th>Gender</th>
+                  <th>ID</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Country</th>
+                  <th>Age</th>
+                  <th>Gender</th>
                 </tr>
               </thead>
               <tbody>
@@ -55,22 +57,22 @@
                 $userResult = mysqli_query($conn, $userQuery);
 
                 if ($userResult && mysqli_num_rows($userResult) > 0):
-                    while ($user = mysqli_fetch_assoc($userResult)):
-                        $detailsQuery = "SELECT age, gender FROM user_details WHERE user_id = " . $user['id'];
-                        $detailsResult = mysqli_query($conn, $detailsQuery);
-                        $details = mysqli_fetch_assoc($detailsResult);
+                  while ($user = mysqli_fetch_assoc($userResult)):
+                    $detailsQuery = "SELECT age, gender FROM user_details WHERE user_id = " . $user['id'];
+                    $detailsResult = mysqli_query($conn, $detailsQuery);
+                    $details = mysqli_fetch_assoc($detailsResult);
                 ?>
-                <tr data-id="<?= $user['id'] ?>" data-gender="<?= $details['gender'] ?? '' ?>">
-                    <td><?= $user['id'] ?></td>
-                    <td><?= $user['full_name'] ?></td>
-                    <td><?= $user['email'] ?></td>
-                    <td><?= $user['phone_number'] ?></td>
-                    <td><?= $user['country'] ?></td>
-                    <td><?= $details['age'] ?? 'N/A' ?></td>
-                    <td class="gender"><?= $details['gender'] ?? 'N/A' ?></td>
-                </tr>
+                    <tr data-id="<?= $user['id'] ?>" data-gender="<?= $details['gender'] ?? '' ?>">
+                      <td><?= $user['id'] ?></td>
+                      <td><?= $user['full_name'] ?></td>
+                      <td><?= $user['email'] ?></td>
+                      <td><?= $user['phone_number'] ?></td>
+                      <td><?= $user['country'] ?></td>
+                      <td><?= $details['age'] ?? 'N/A' ?></td>
+                      <td class="gender"><?= $details['gender'] ?? 'N/A' ?></td>
+                    </tr>
                 <?php
-                    endwhile;
+                  endwhile;
                 endif;
                 ?>
               </tbody>
@@ -105,7 +107,7 @@
   <script src="contextMenu.js"></script>
 
   <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
       const table = $('#users_report').DataTable({
         paging: true,
         searching: true,
@@ -114,8 +116,7 @@
         pageLength: 50,
         lengthChange: true,
         dom: 'Bfrtip',
-        buttons: [
-          {
+        buttons: [{
             extend: 'copy',
             className: 'btn copy',
             text: '<i class="fa fa-copy"></i>',
@@ -187,4 +188,5 @@
   </script>
 
 </body>
+
 </html>

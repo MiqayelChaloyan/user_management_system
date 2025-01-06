@@ -86,10 +86,9 @@ $html .= '</tbody></table>
 </html>';
 
 $dompdf->loadHtml($html);  // Load the HTML content into Dompdf
-$dompdf->setPaper('A4', 'landscape'); // Set paper size and orientation
+$dompdf->setPaper('A4', 'portrait'); // Set paper size and orientation
 
 $dompdf->render(); // Render the PDF
 
 $pdf = $dompdf->output(); // Get the output as PDF
 file_put_contents("newfilegen.pdf", $pdf); // Save the generated PDF to file
-?>

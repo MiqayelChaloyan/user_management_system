@@ -22,7 +22,7 @@ if (isset($_GET['user_id'])) {
     $row = mysqli_fetch_assoc($result);
 
     // Format the date (dob) into a more readable format (e.g., dd-mm-yyyy)
-    $formattedDob = date("d-m-Y", strtotime($row['dob']));
+    $formattedDob = date("m-d-Y", strtotime($row['dob']));
 
     // HTML structure with added styles
     $html = "
@@ -80,11 +80,26 @@ if (isset($_GET['user_id'])) {
 
     // Load HTML into Dompdf
     $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait'); // Set paper size and orientation
 
     // Render PDF (first pass)
     $dompdf->render();
 
-    // Stream the generated PDF to the browser
-    $dompdf->stream("user_$userId.pdf", array("Attachment" => 0));
+    // Create the folder if it doesn't exist
+    $folderPath = 'user_pdfs'; // Specify the folder name
+    if (!file_exists($folderPath)) {
+        mkdir($folderPath, 0777, true); // Create the folder with appropriate permissions
+    }
+
+    // Save the PDF to the folder
+    $pdfFilePath = $folderPath . "/user_$userId.pdf";
+    $pdf = $dompdf->output(); // Get the output as PDF
+    file_put_contents($pdfFilePath, $pdf); // Save the generated PDF to the folder
+
+    // Now force the download of the saved PDF file
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: attachment; filename="' . basename($pdfFilePath) . '"');
+    readfile($pdfFilePath); // Output the file for download
+
+    exit(); // Ensure no further output is sent
 }
-?>
