@@ -46,14 +46,15 @@
                   <th>Full Name</th>
                   <th>Email</th>
                   <th>Phone</th>
-                  <th>Country</th>
+                  <th>Region</th>
+                  <th>City</th>
                   <th>Age</th>
                   <th>Gender</th>
                 </tr>
               </thead>
               <tbody>
                 <?php
-                $userQuery = "SELECT id, full_name, email, phone_number, country FROM users";
+                $userQuery = "SELECT id, full_name, email, phone_number, region, city FROM users";
                 $userResult = mysqli_query($conn, $userQuery);
 
                 if ($userResult && mysqli_num_rows($userResult) > 0):
@@ -62,14 +63,15 @@
                     $detailsResult = mysqli_query($conn, $detailsQuery);
                     $details = mysqli_fetch_assoc($detailsResult);
                 ?>
-                    <tr data-id="<?= $user['id'] ?>" data-gender="<?= $details['gender'] ?? '' ?>">
-                      <td><?= $user['id'] ?></td>
-                      <td><?= $user['full_name'] ?></td>
-                      <td><?= $user['email'] ?></td>
-                      <td><?= $user['phone_number'] ?></td>
-                      <td><?= $user['country'] ?></td>
-                      <td><?= $details['age'] ?? 'N/A' ?></td>
-                      <td class="gender"><?= $details['gender'] ?? 'N/A' ?></td>
+                    <tr data-id="<?php echo $user['id'] ?>" data-gender="<?php echo $details['gender'] ?? '' ?>">
+                      <td><?php echo $user['id'] ?></td>
+                      <td><?php echo $user['full_name'] ?></td>
+                      <td><?php echo $user['email'] ?></td>
+                      <td><?php echo $user['phone_number'] ?></td>
+                      <td><?php echo $user['region'] ?></td>
+                      <td><?php echo $user['city'] ?></td>
+                      <td><?php echo $details['age'] ?? 'N/A' ?></td>
+                      <td class="gender"><?php echo $details['gender'] ?? 'N/A' ?></td>
                     </tr>
                 <?php
                   endwhile;

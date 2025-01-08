@@ -11,10 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = trim($_POST['full_name']);
     $email = trim($_POST['email']);
     $phone_number = trim($_POST['phone_number']);
-    $country = trim($_POST['country']);
+    $region = trim($_POST['region']);
+    $city = trim($_POST['city']);
 
-    $query = "INSERT INTO `users` (`full_name`, `email`, `phone_number`, `country`) 
-              VALUES ('$full_name', '$email', '$phone_number', '$country')";
+    $query = "INSERT INTO `users` (`full_name`, `email`, `phone_number`, `region`, `city`) 
+              VALUES ('$full_name', '$email', '$phone_number', '$region', '$city')";
     
     if ($conn->query($query)) {
         $response = [

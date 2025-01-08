@@ -144,6 +144,7 @@ $(document).ready(function () {
         }
 
         $(document).on('click', '.delete-user', function () {
+            
             const userId = $(this).data('id'); // Get the user ID from the button's data attribute
             const selectedRow = $(this).closest('tr'); // Find the closest <tr> to the clicked button
 

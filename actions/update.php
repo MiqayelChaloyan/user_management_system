@@ -14,16 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $full_name = isset($_POST['full_name']) ? trim($_POST['full_name']) : '';
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
         $phone_number = isset($_POST['phone_number']) ? trim($_POST['phone_number']) : '';
-        $country = isset($_POST['country']) ? trim($_POST['country']) : '';
+        $region = $_POST['region'];
+        $city = $_POST['city'];
 
-        if (empty($full_name) || empty($email) || empty($phone_number) || empty($country)) {
+        if (empty($full_name) || empty($email) || empty($phone_number) || empty($region) || empty($city)) {
             $response = [
                 'status' => 400,
                 'message' => 'All fields are required.'
             ];
             http_response_code(400);
         } else {
-            $query = "UPDATE users SET full_name = '$full_name', email = '$email', phone_number = '$phone_number', country = '$country' WHERE id = $user_id";
+            $query = "UPDATE users SET full_name = '$full_name', email = '$email', phone_number = '$phone_number', region = '$region', city = '$city' WHERE id = $user_id";
 
             if (mysqli_query($conn, $query)) {
                 $response = [

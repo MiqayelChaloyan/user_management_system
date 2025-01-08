@@ -12,7 +12,7 @@ if (isset($_GET['user_id'])) {
 
     // Query for user details
     $query = "
-        SELECT u.id, u.full_name, u.email, u.phone_number, u.country, d.age, d.gender, d.job, d.dob, d.info
+        SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, d.age, d.gender, d.job, d.dob, d.info
         FROM users u
         LEFT JOIN user_details d ON u.id = d.user_id
         WHERE u.id = $userId
@@ -67,7 +67,8 @@ if (isset($_GET['user_id'])) {
                     <tr><th>Full Name:</th><td>" . (!empty($row['full_name']) ? $row['full_name'] : 'N/A') . "</td></tr>
                     <tr><th>Email:</th><td>" . (!empty($row['email']) ? $row['email'] : 'N/A') . "</td></tr>
                     <tr><th>Phone:</th><td>" . (!empty($row['phone_number']) ? $row['phone_number'] : 'N/A') . "</td></tr>
-                    <tr><th>Country:</th><td>" . (!empty($row['country']) ? $row['country'] : 'N/A') . "</td></tr>
+                    <tr><th>Region:</th><td>" . (!empty($row['region']) ? $row['region'] : 'N/A') . "</td></tr>
+                    <tr><th>City:</th><td>" . (!empty($row['city']) ? $row['city'] : 'N/A') . "</td></tr>
                     <tr><th>Age:</th><td>" . (!empty($row['age']) ? $row['age'] : 'N/A') . "</td></tr>
                     <tr><th>Gender:</th><td>" . (!empty($row['gender']) ? $row['gender'] : 'N/A') . "</td></tr>
                     <tr><th>Job:</th><td>" . (!empty($row['job']) ? $row['job'] : 'N/A') . "</td></tr>

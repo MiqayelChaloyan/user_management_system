@@ -53,7 +53,8 @@ $html = '
             <th>Full Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Country</th>
+            <th>Region</th>
+            <th>City</th>
             <th>Age</th>
             <th>Gender</th>
         </tr>
@@ -61,7 +62,7 @@ $html = '
     <tbody>';
 
 // MySQL query to get user data
-$query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.country, d.age, d.gender 
+$query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, d.age, d.gender 
           FROM users u
           LEFT JOIN user_details d ON u.id = d.user_id";
 $result = mysqli_query($conn, $query);
@@ -73,7 +74,8 @@ if ($result && mysqli_num_rows($result) > 0):
                       <td>' . $row['full_name'] . '</td>
                       <td>' . $row['email'] . '</td>
                       <td>' . $row['phone_number'] . '</td>
-                      <td>' . $row['country'] . '</td>
+                      <td>' . $row['region'] . '</td>
+                      <td>' . $row['city'] . '</td>
                       <td>' . ($row['age'] ?? 'N/A') . '</td>
                       <td>' . ($row['gender'] ?? 'N/A') . '</td>
                   </tr>';

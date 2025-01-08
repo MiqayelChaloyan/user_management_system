@@ -28,49 +28,34 @@
                 <h1 class="text-center text-primary mb-4">Add Form</h1>
                 <form id="user_form" action="process/add-user.php" method="POST">
                     <div class="mb-3">
-                        <label for="full_name" class="form-label">
-                            Full Name
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="full_name"
-                            name="full_name"
-                            required>
+                        <label for="region" class="form-label">Region</label>
+                        <select class="form-select" id="region" name="region" required>
+                            <option value="" disabled selected>Select Region</option>
+                        </select>
                     </div>
+
                     <div class="mb-3">
-                        <label for="email" class="form-label">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            class="form-control"
-                            id="email"
-                            name="email"
-                            required>
+                        <label for="city" class="form-label">City</label>
+                        <select class="form-select" id="city" name="city" required disabled>
+                            <option value="" disabled selected>Select City</option>
+                        </select>
                     </div>
+
                     <div class="mb-3">
-                        <label for="phone_number" class="form-label">
-                            Phone Number
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="phone_number"
-                            name="phone_number"
-                            required>
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" required>
                     </div>
+
                     <div class="mb-3">
-                        <label for="country" class="form-label">
-                            Country
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="country"
-                            name="country"
-                            required>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                    </div>
+
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary w-50" id="submit_button">Submit</button>
                     </div>
@@ -81,6 +66,76 @@
 
     <script>
         $(document).ready(function() {
+            // Fetch and populate the regions dropdown
+            $.ajax({
+                url: 'fetch-cities.php',
+                type: 'GET',
+                success: function(response) {
+                    try {
+                        const data = JSON.parse(response);
+                        if (data.status === 200) {
+                            let regionOptions = '<option value="" disabled selected>Select Region</option>';
+                            data.regions.forEach(region => {
+                                regionOptions += `<option value="${region.region}">${region.region}</option>`;
+                            });
+                            $('#region').html(regionOptions);
+                        } else {
+                            $('#region').html('<option value="" disabled>No regions available</option>');
+                        }
+                    } catch (e) {
+                        console.error('Invalid JSON response for regions', e);
+                        $('#region').html('<option value="" disabled>Error loading regions</option>');
+                    }
+                },
+                error: function() {
+                    console.error('Error fetching regions');
+                    $('#region').html('<option value="" disabled>Error loading regions</option>');
+                }
+            });
+
+            // Fetch and populate the cities dropdown based on selected region name
+            $('#region').on('change', function() {
+                const regionName = $(this).val();
+
+                if (regionName) {
+                    $('#city').prop('disabled', false).html('<option value="" disabled>Loading...</option>');
+                    $.ajax({
+                        url: 'fetch-cities.php',
+                        type: 'GET',
+                        data: {
+                            region: regionName
+                        },
+                        success: function(response) {
+                            try {
+                                const data = JSON.parse(response);
+                                if (data.status === 200) {
+                                    let cityOptions = '<option value="" disabled selected>Select City</option>';
+                                    data.cities.forEach(city => {
+                                        cityOptions += `<option value="${city.city}">${city.city}</option>`;
+                                    });
+                                    $('#city').html(cityOptions);
+                                } else {
+                                    $('#city').html('<option value="" disabled>No cities found</option>');
+                                }
+                            } catch (e) {
+                                console.error('Invalid JSON response for cities', e);
+                                $('#city').html('<option value="" disabled>Error loading cities</option>');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                            $('#city').html('<option value="" disabled>Error loading cities</option>');
+                        }
+                    });
+                } else {
+                    $('#city').prop('disabled', true).html('<option value="" disabled selected>Select City</option>');
+                }
+            });
+
+
+
+
+
             // TODO: Update validation rules if more fields are added in the future
             $("#user_form").validate({
                 rules: {
@@ -94,7 +149,10 @@
                     phone_number: {
                         required: true,
                     },
-                    country: {
+                    region: {
+                        required: true,
+                    },
+                    city: {
                         required: true,
                     }
                 },

@@ -15,7 +15,8 @@ if (isset($_GET['id'])) {
         $full_name = $user['full_name'];
         $email = $user['email'];
         $phone_number = $user['phone_number'];
-        $country = $user['country'];
+        $region = $user['region'];
+        $city = $user['city'];
     } else {
         echo "User not found.";
         exit;
@@ -50,6 +51,21 @@ if (isset($_GET['id'])) {
             <div class="card-body">
                 <h1 class="text-center text-primary mb-4">Update Form</h1>
                 <form id="user_form_update" method="POST">
+
+                    <div class="mb-3">
+                        <label for="region" class="form-label">Region</label>
+                        <select class="form-select" id="region" name="region">
+                            <option value=<?= $region ?> selected><?= $region ?></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <select class="form-select" id="city" name="city">
+                            <option value=<?= $city ?> selected><?= $city ?></option>
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label for="full_name" class="form-label">
                             Full Name
@@ -86,18 +102,6 @@ if (isset($_GET['id'])) {
                             value="<?= $phone_number ?>"
                             required>
                     </div>
-                    <div class="mb-3">
-                        <label for="country" class="form-label">
-                            Country
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="country"
-                            name="country"
-                            value="<?= $country ?>"
-                            required>
-                    </div>
                     <div class="d-flex justify-content-center">
                         <button
                             type="submit"
@@ -114,6 +118,79 @@ if (isset($_GET['id'])) {
 
     <script>
         $(document).ready(function() {
+            // Fetch and populate the regions dropdown
+            $.ajax({
+                url: './fetch-cities.php',
+                type: 'GET',
+                success: function(response) {
+                    try {
+                        const data = JSON.parse(response);
+                        if (data.status === 200) {
+                            let regionOptions = '<option value="" disabled selected>Select Region</option>';
+                            data.regions.forEach(region => {
+                                regionOptions += `<option value="${region.region}" ${region.region === '<?= $region ?>' ? 'selected' : ''}>${region.region}</option>`;
+                            });
+                            $('#region').html(regionOptions);
+                        } else {
+                            $('#region').html('<option value="" disabled>No regions available</option>');
+                        }
+                    } catch (e) {
+                        console.error('Invalid JSON response for regions', e);
+                        $('#region').html('<option value="" disabled>Error loading regions</option>');
+                    }
+                },
+                error: function() {
+                    console.error('Error fetching regions');
+                    $('#region').html('<option value="" disabled>Error loading regions</option>');
+                }
+            });
+
+            // Fetch and populate the cities dropdown based on selected region
+            $('#region').on('change', function() {
+                const regionName = $(this).val();
+
+                if (regionName) {
+                    $('#city').prop('disabled', false).html('<option value="" disabled>Loading...</option>');
+                    $.ajax({
+                        url: './fetch-cities.php',
+                        type: 'GET',
+                        data: {
+                            region: regionName
+                        },
+                        success: function(response) {
+                            try {
+                                const data = JSON.parse(response);
+                                if (data.status === 200) {
+                                    let cityOptions = '<option value="" disabled>Select City</option>';
+                                    data.cities.forEach(city => {
+                                        cityOptions += `<option value="${city.city}" ${city.city === '<?= $city ?>' ? 'selected' : ''}>${city.city}</option>`;
+                                    });
+                                    $('#city').html(cityOptions);
+                                } else {
+                                    $('#city').html('<option value="" disabled>No cities found</option>');
+                                }
+                            } catch (e) {
+                                console.error('Invalid JSON response for cities', e);
+                                $('#city').html('<option value="" disabled>Error loading cities</option>');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                            $('#city').html('<option value="" disabled>Error loading cities</option>');
+                        }
+                    });
+                }
+            });
+
+            // Pre-populate cities based on the selected region when page loads
+            const selectedRegion = '<?= $region ?>';
+            if (selectedRegion) {
+                $('#region').val(selectedRegion).trigger('change');
+            }
+
+
+
+
             // TODO: Add validation for specific input types like phone number and email format
             $("#user_form_update").validate({
                 rules: {
@@ -127,8 +204,11 @@ if (isset($_GET['id'])) {
                     phone_number: {
                         required: true,
                     },
-                    country: {
-                        required: true,
+                    region: {
+                        required: false,
+                    },
+                    city: {
+                        required: false,
                     }
                 },
                 submitHandler: submitForm

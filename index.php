@@ -77,7 +77,8 @@ include 'includes/db.php';
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Country</th>
+                    <th>Region</th>
+                    <th>City</th>
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Action</th>
@@ -85,7 +86,7 @@ include 'includes/db.php';
             </thead>
             <tbody>
                 <?php
-                $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.country, d.age, d.gender 
+                $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, d.age, d.gender
                           FROM users u
                           LEFT JOIN user_details d ON u.id = d.user_id";
                 $result = mysqli_query($conn, $query);
@@ -99,14 +100,15 @@ include 'includes/db.php';
                             <td><?php echo $row['full_name'] ?></td>
                             <td><?php echo $row['email'] ?></td>
                             <td><?php echo $row['phone_number'] ?></td>
-                            <td><?php echo $row['country'] ?></td>
+                            <td><?php echo $row['region'] ?></td>
+                            <td><?php echo $row['city'] ?></td>
                             <td><?php echo $row['age'] ?? 'N/A' ?></td>
                             <td><?php echo $row['gender'] ?? 'N/A' ?></td>
                             <td>
-                                <a href="process/update-user.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
+                                <a href="process/update-user.php?id=<?php echo $row['id'] ?>" class="btn btn-primary btn-sm">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <button class="btn btn-danger btn-sm delete-btn" data-id="<?= $row['id'] ?>">
+                                <button class="btn btn-danger btn-sm delete-btn delete-user" data-id="<?php echo $row['id'] ?>">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 <a href="generate_user_pdf.php?user_id=<?php echo $row['id']; ?>" class="btn btn-success btn-sm">
@@ -192,7 +194,10 @@ include 'includes/db.php';
                         data: 'phone_number'
                     },
                     {
-                        data: 'country'
+                        data: 'region'
+                    },
+                    {
+                        data: 'city'
                     },
                     {
                         data: 'age'
