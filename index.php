@@ -26,7 +26,7 @@ include 'includes/db.php';
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.dataTables.css"> -->
 
     <!-- TODO: Include Font Awesome for icons -->
-    <link rel="stylesheet" type="text/css" href="css/index.css?v=2.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css?v=4.0">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -221,7 +221,11 @@ include 'includes/db.php';
                         className: 'dt-control',
                         orderable: false,
                         data: null,
-                        defaultContent: ''
+                        defaultContent: '',
+                        render: function() {
+                            return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                        },
+                        width:"25px"
                     },
                     {
                         data: 'id'
@@ -253,19 +257,25 @@ include 'includes/db.php';
                 ],
                 rowCallback: function(row, data) {
                     $('td.dt-control', row).on('click', function() {
-                        const tr = $(this).closest('tr');
-                        const row = $('#users').DataTable().row(tr);
+                        var tr = $(this).closest('tr');
+                        var tdi = tr.find("i.fa");
+                        var row = table.row(tr);
+
                         if (row.child.isShown()) {
+                            // Close this row if it's already open
                             row.child.hide();
                             tr.removeClass('shown');
+                            tdi.first().removeClass('fa-minus-square');
+                            tdi.first().addClass('fa-plus-square');
                         } else {
-                            // Fetch user details for the clicked row
+                            // Open this row if it's closed
                             fetchChildRowData(data.id, function(response) {
-                                // Format the child row with the fetched data
-                                const childRowHtml = format(response); // You can modify the format function to handle the response
+                                const childRowHtml = format(response);
                                 row.child(childRowHtml).show();
                                 tr.addClass('shown');
                             });
+                            tdi.first().removeClass('fa-plus-square');
+                            tdi.first().addClass('fa-minus-square');
                         }
                     });
                 },
@@ -312,7 +322,6 @@ include 'includes/db.php';
                 ],
                 order: [
                     [6, 'asc'],
-                    [7, 'desc']
                 ]
             });
 
@@ -326,8 +335,7 @@ include 'includes/db.php';
             // Gender filter logic
             $('input[name="gender"]').on('change', function() {
                 const selectedGender = $(this).val();
-                table.column(7).search(selectedGender).draw();
-                table.order([7, 'desc']).draw();
+                table.column(8).search(selectedGender).draw();
             });
 
             function format(d) {
