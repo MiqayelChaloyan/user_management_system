@@ -19,9 +19,15 @@ if (isset($_GET['user_id'])) {
     ";
 
     $result = mysqli_query($conn, $query);
+
+    if (!$result || mysqli_num_rows($result) === 0) {
+        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        exit();
+    }
+
     $row = mysqli_fetch_assoc($result);
 
-    // Format the date (dob) into a more readable format (e.g., dd-mm-yyyy)
+    // Format the date (dob) into a readable format (e.g., dd-mm-yyyy)
     $formattedDob = date("m-d-Y", strtotime($row['dob']));
 
     // HTML structure with added styles
@@ -97,10 +103,9 @@ if (isset($_GET['user_id'])) {
     $pdf = $dompdf->output(); // Get the output as PDF
     file_put_contents($pdfFilePath, $pdf); // Save the generated PDF to the folder
 
-    // Now force the download of the saved PDF file
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="' . basename($pdfFilePath) . '"');
-    readfile($pdfFilePath); // Output the file for download
-
-    exit(); // Ensure no further output is sent
+    echo json_encode(['status' => 'success', 'file_path' => $pdfFilePath]);
+    exit();
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'No user ID provided']);
+    exit();
 }

@@ -111,9 +111,9 @@ include 'includes/db.php';
                                 <button class="btn btn-danger btn-sm delete-btn delete-user" data-id="<?php echo $row['id'] ?>">
                                     <i class="fa fa-trash"></i>
                                 </button>
-                                <a href="generate_user_pdf.php?user_id=<?php echo $row['id']; ?>" class="btn btn-success btn-sm">
+                                <button id="generate-pdf" onclick="downloadPdf(this)" data-user-id="<?php echo $row['id']; ?>" class="btn btn-success btn-sm">
                                     <i class="fas fa-file-pdf"></i>
-                                </a>
+                                </button>
                             </td>
                         </tr>
                 <?php endwhile;
@@ -148,6 +148,48 @@ include 'includes/db.php';
     <script type='text/javascript' src='https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js'></script>
 
     <script>
+        function downloadPdf(button) {
+            const userId = button.getAttribute('data-user-id');
+
+            $.ajax({
+                url: `generate_user_pdf.php`,
+                method: 'GET',
+                data: {
+                    user_id: userId
+                },
+                success: function(response) {
+                    try {
+                        const data = JSON.parse(response);
+
+                        if (data.status && data.file_path) {
+                            Swal.fire({
+                                title: 'User PDF',
+                                html: `<iframe src="${data.file_path}" width="100%" height="400px" frameborder="0"></iframe>`,
+                                width: '80%',
+                                confirmButtonText: 'Close',
+                            });
+                        } else {
+                            throw new Error(data.message || 'An error occurred.');
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.message,
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to fetch the PDF file path.',
+                    });
+                }
+            });
+        };
+
+
         $(document).ready(function() {
             // Fetch data for the child row
             function fetchChildRowData(userId, callback) {

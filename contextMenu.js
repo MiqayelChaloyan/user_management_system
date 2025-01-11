@@ -10,7 +10,6 @@ $(document).ready(function () {
         success: function (permissionData) {
             if (permissionData.status === 200 && permissionData.permissions) {
                 globalPermissions = permissionData.permissions;
-                console.log('Global Permissions:', globalPermissions); // Debugging
             } else {
                 Swal.fire('Error', permissionData.message || 'Failed to fetch permissions.', 'error');
             }
