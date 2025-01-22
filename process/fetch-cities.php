@@ -1,9 +1,9 @@
 <?php
 include '../includes/db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (isset($_GET['region'])) {
-        $regionName = $_GET['region'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['region'])) {
+        $regionName = $_POST['region'];
         $query = "SELECT id, city FROM location WHERE region = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("s", $regionName);

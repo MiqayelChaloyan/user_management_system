@@ -69,7 +69,7 @@
             // Fetch and populate the regions dropdown
             $.ajax({
                 url: 'fetch-cities.php',
-                type: 'GET',
+                type: 'POST',
                 success: function(response) {
                     try {
                         const data = JSON.parse(response);
@@ -101,7 +101,7 @@
                     $('#city').prop('disabled', false).html('<option value="" disabled>Loading...</option>');
                     $.ajax({
                         url: 'fetch-cities.php',
-                        type: 'GET',
+                        type: 'POST',
                         data: {
                             region: regionName
                         },

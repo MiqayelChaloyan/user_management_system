@@ -54,7 +54,8 @@ if (isset($_GET['id'])) {
 
                     <div class="mb-3">
                         <label for="region" class="form-label">Region</label>
-                        <select class="form-select" id="region" name="region">
+                        <select  class="form-select" id="region" name="region">
+                            <?php ?>
                             <option value=<?= $region ?> selected><?= $region ?></option>
                         </select>
                     </div>
@@ -153,7 +154,7 @@ if (isset($_GET['id'])) {
                     $('#city').prop('disabled', false).html('<option value="" disabled>Loading...</option>');
                     $.ajax({
                         url: './fetch-cities.php',
-                        type: 'GET',
+                        type: 'POST',
                         data: {
                             region: regionName
                         },

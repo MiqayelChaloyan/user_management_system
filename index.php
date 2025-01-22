@@ -262,13 +262,11 @@ include 'includes/db.php';
                         var row = table.row(tr);
 
                         if (row.child.isShown()) {
-                            // Close this row if it's already open
                             row.child.hide();
                             tr.removeClass('shown');
                             tdi.first().removeClass('fa-minus-square');
                             tdi.first().addClass('fa-plus-square');
                         } else {
-                            // Open this row if it's closed
                             fetchChildRowData(data.id, function(response) {
                                 const childRowHtml = format(response);
                                 row.child(childRowHtml).show();
@@ -321,21 +319,21 @@ include 'includes/db.php';
                     }
                 ],
                 order: [
-                    [6, 'asc'],
+                    [7, 'asc'],
                 ]
             });
 
             // Sort by Age when the checkbox is checked
             $('#sortByAge').on('change', function() {
                 if ($(this).prop('checked')) {
-                    table.order([6, 'asc']).draw();
+                    table.order([7, 'asc']).draw();
                 }
             });
 
             // Gender filter logic
             $('input[name="gender"]').on('change', function() {
                 const selectedGender = $(this).val();
-                table.column(8).search(selectedGender).draw();
+                table.column(9).search(selectedGender).draw();
             });
 
             function format(d) {
