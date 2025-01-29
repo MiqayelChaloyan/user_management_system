@@ -17,6 +17,7 @@ if (isset($_GET['id'])) {
         $phone_number = $user['phone_number'];
         $region = $user['region'];
         $city = $user['city'];
+        $file = $user['file'];
     } else {
         echo "User not found.";
         exit;
@@ -50,11 +51,11 @@ if (isset($_GET['id'])) {
         <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
             <div class="card-body">
                 <h1 class="text-center text-primary mb-4">Update Form</h1>
-                <form id="user_form_update" method="POST">
+                <form id="user_form_update" method="POST" enctype="multipart/form-data">
 
                     <div class="mb-3">
                         <label for="region" class="form-label">Region</label>
-                        <select  class="form-select" id="region" name="region">
+                        <select class="form-select" id="region" name="region">
                             <?php ?>
                             <option value=<?= $region ?> selected><?= $region ?></option>
                         </select>
@@ -103,6 +104,30 @@ if (isset($_GET['id'])) {
                             value="<?= $phone_number ?>"
                             required>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="uploadfile" class="form-label">
+                            Image
+                        </label>
+                        <div class="d-flex align-items-center gap-3">
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="image"
+                                name="image"
+                                value="<?= $file ?>"
+                                accept="image/*">
+                            <?php if (!empty($file)): ?>
+                                <img
+                                    src="../uploads/<?= $file ?>"
+                                    alt="User Photo"
+                                    style="width: 50px; height: 50px;">
+                            <?php else: ?>
+                                No Image
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-center">
                         <button
                             type="submit"
@@ -122,7 +147,7 @@ if (isset($_GET['id'])) {
             // Fetch and populate the regions dropdown
             $.ajax({
                 url: './fetch-cities.php',
-                type: 'GET',
+                type: 'POST',
                 success: function(response) {
                     try {
                         const data = JSON.parse(response);
@@ -217,14 +242,22 @@ if (isset($_GET['id'])) {
 
             function submitForm() {
                 NProgress.start();
-                let data = $("#user_form_update").serialize();
+
+                let form = $("#user_form_update")[0]; // Get the form element
+                let formData = new FormData(form); // Create FormData object
+
                 let userId = $("#submit_button").data('user-id');
-                data += "&user_id=" + userId;
+
+                // Append user_id to the FormData object using append() method
+                formData.append("user_id", userId);
+
 
                 $.ajax({
                     type: 'POST',
                     url: '../actions/update.php',
-                    data: data,
+                    data: formData,
+                    contentType: false, // Prevent jQuery from overriding content type
+                    processData: false, // Prevent jQuery from converting FormData to string
                     dataType: 'json',
                     success: function(data) {
                         NProgress.done();

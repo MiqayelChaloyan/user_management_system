@@ -81,14 +81,16 @@ include 'includes/db.php';
                     <th>City</th>
                     <th>Age</th>
                     <th>Gender</th>
+                    <th>Image</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, d.age, d.gender
-                          FROM users u
-                          LEFT JOIN user_details d ON u.id = d.user_id";
+                $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, u.file, d.age, d.gender
+        FROM users u
+        LEFT JOIN user_details d ON u.id = d.user_id";
+
                 $result = mysqli_query($conn, $query);
 
                 if ($result && mysqli_num_rows($result) > 0):
@@ -105,6 +107,16 @@ include 'includes/db.php';
                             <td><?php echo $row['age'] ?? 'N/A' ?></td>
                             <td><?php echo $row['gender'] ?? 'N/A' ?></td>
                             <td>
+                                <?php if (!empty($row['file'])): ?>
+                                    <img
+                                        src="uploads/<?php echo $row['file']; ?>"
+                                        alt="User Photo"
+                                        style="width: 50px; height: 50px;">
+                                <?php else: ?>
+                                    No Image
+                                <?php endif; ?>
+                            </td>
+                            <td>
                                 <a href="process/update-user.php?id=<?php echo $row['id'] ?>" class="btn btn-primary btn-sm">
                                     <i class="fa fa-edit"></i>
                                 </a>
@@ -120,6 +132,9 @@ include 'includes/db.php';
                 endif; ?>
             </tbody>
         </table>
+
+
+
     </div>
 
     <!-- TODO: Context Menu -->
@@ -225,7 +240,7 @@ include 'includes/db.php';
                         render: function() {
                             return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
                         },
-                        width:"25px"
+                        width: "25px"
                     },
                     {
                         data: 'id'
@@ -250,6 +265,9 @@ include 'includes/db.php';
                     },
                     {
                         data: 'gender'
+                    },
+                    {
+                        data: 'file'
                     },
                     {
                         data: 'action'

@@ -26,14 +26,13 @@
         <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
             <div class="card-body">
                 <h1 class="text-center text-primary mb-4">Add Form</h1>
-                <form id="user_form" action="process/add-user.php" method="POST">
+                <form id="user_form" action="process/add-user.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="region" class="form-label">Region</label>
                         <select class="form-select" id="region" name="region" required>
                             <option value="" disabled selected>Select Region</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label for="city" class="form-label">City</label>
                         <select class="form-select" id="city" name="city" required disabled>
@@ -54,6 +53,11 @@
                     <div class="mb-3">
                         <label for="phone_number" class="form-label">Phone Number</label>
                         <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="uploadfile" class="form-label">Image</label>
+                        <input type="file" class="form-control" name="image" accept="image/*" />
                     </div>
 
                     <div class="d-flex justify-content-center">
@@ -154,18 +158,26 @@
                     },
                     city: {
                         required: true,
-                    }
+                    },
                 },
                 submitHandler: submitForm
             });
 
+
+
+
             function submitForm() {
                 NProgress.start();
-                let data = $("#user_form").serialize();
+
+                let form = $("#user_form")[0]; // Get the form element
+                let formData = new FormData(form); // Create FormData object
+
                 $.ajax({
                     type: 'POST',
                     url: '../actions/create.php',
-                    data: data,
+                    data: formData,
+                    contentType: false, // Prevent jQuery from overriding content type
+                    processData: false, // Prevent jQuery from converting FormData to string
                     dataType: 'json',
                     success: function(data, textStatus, jqXHR) {
                         NProgress.done();
