@@ -15,7 +15,7 @@
 
 <body>
 
-  <!-- Fullscreen Modal -->
+  <!-- TODO: Fullscreen Modal -->
   <div class="modal fade" id="fullscreenModal" tabindex="-1" role="dialog" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
       <div class="modal-content">
@@ -28,7 +28,7 @@
         <div class="modal-body">
           <div class="scroll-content">
 
-            <!-- Gender Filter Dropdown -->
+            <!-- TODO: Gender Filter Dropdown -->
             <div class="mb-3 custom-width">
               <label for="genderFilter">Filter by Gender:</label>
               <select id="genderFilter" class="form-control">
@@ -38,7 +38,7 @@
               </select>
             </div>
 
-            <!-- Table -->
+            <!-- TODO: Table -->
             <table id="users_report" class="table table-bordered table-striped">
               <thead>
                 <tr>
@@ -176,7 +176,8 @@
         ]
       });
 
-      // Gender filter logic
+      
+      // TODO: Gender filter logic
       $('#genderFilter').on('change', function() {
         var selectedGender = $(this).val();
 

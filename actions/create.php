@@ -15,15 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $city = trim($_POST['city']);
     
     $uploadDir = "../uploads/";
-    $fileName = NULL; // Default to NULL if no file is uploaded
+    $fileName = NULL;
 
-    // Check if an image is uploaded
+    // TODO: Check if an image is uploaded
     if (!empty($_FILES['image']['name'])) {
         $fileExt = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
         if (in_array($fileExt, $allowedTypes)) {
-            // Generate a unique filename
+            // TODO: Generate a unique filename
             $fileName = uniqid("user_", true) . "." . $fileExt;
             $targetFilePath = $uploadDir . $fileName;
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Insert user into the database (with or without file)
+    // TODO: Insert user into the database (with or without file)
     $query = "INSERT INTO `users` (`full_name`, `email`, `phone_number`, `region`, `city`, `file`) 
     VALUES ('$full_name', '$email', '$phone_number', '$region', '$city', '$fileName')";
 

@@ -25,7 +25,6 @@ if (isset($_GET['id'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -144,7 +143,7 @@ if (isset($_GET['id'])) {
 
     <script>
         $(document).ready(function() {
-            // Fetch and populate the regions dropdown
+            // TODO: Fetch and populate the regions dropdown
             $.ajax({
                 url: './fetch-cities.php',
                 type: 'POST',
@@ -171,7 +170,8 @@ if (isset($_GET['id'])) {
                 }
             });
 
-            // Fetch and populate the cities dropdown based on selected region
+
+            // TODO: Fetch and populate the cities dropdown based on selected region
             $('#region').on('change', function() {
                 const regionName = $(this).val();
 
@@ -208,13 +208,12 @@ if (isset($_GET['id'])) {
                 }
             });
 
-            // Pre-populate cities based on the selected region when page loads
+
+            // TODO: Pre-populate cities based on the selected region when page loads
             const selectedRegion = '<?= $region ?>';
             if (selectedRegion) {
                 $('#region').val(selectedRegion).trigger('change');
             }
-
-
 
 
             // TODO: Add validation for specific input types like phone number and email format
@@ -243,12 +242,13 @@ if (isset($_GET['id'])) {
             function submitForm() {
                 NProgress.start();
 
-                let form = $("#user_form_update")[0]; // Get the form element
-                let formData = new FormData(form); // Create FormData object
+                let form = $("#user_form_update")[0]; // TODO: Get the form element
+                let formData = new FormData(form); // TODO: Create FormData object
 
+                // TODO: Get the userId value from the form's attribute
                 let userId = $("#submit_button").data('user-id');
 
-                // Append user_id to the FormData object using append() method
+                // TODO: Append user_id to the FormData object using append() method
                 formData.append("user_id", userId);
 
 
@@ -256,8 +256,8 @@ if (isset($_GET['id'])) {
                     type: 'POST',
                     url: '../actions/update.php',
                     data: formData,
-                    contentType: false, // Prevent jQuery from overriding content type
-                    processData: false, // Prevent jQuery from converting FormData to string
+                    contentType: false, // TODO: Prevent jQuery from overriding content type
+                    processData: false, // TODO: Prevent jQuery from converting FormData to string
                     dataType: 'json',
                     success: function(data) {
                         NProgress.done();

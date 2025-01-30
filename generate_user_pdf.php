@@ -6,11 +6,11 @@ use Dompdf\Dompdf;
 
 $dompdf = new Dompdf();
 
-// Get the user_id from the query string (e.g., `generate_user_pdf.php?user_id=1`)
-if (isset($_GET['user_id'])) {
-    $userId = $_GET['user_id'];
+// TODO: Get the user_id from the query string (e.g., `generate_user_pdf.php?user_id=1`)
+if (isset($_POST['user_id'])) {
+    $userId = $_POST['user_id'];
 
-    // Query for user details
+    // TODO: Query for user details
     $query = "
         SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, d.age, d.gender, d.job, d.dob, d.info
         FROM users u
@@ -27,10 +27,10 @@ if (isset($_GET['user_id'])) {
 
     $row = mysqli_fetch_assoc($result);
 
-    // Format the date (dob) into a readable format (e.g., dd-mm-yyyy)
+    // TODO: Format the date (dob) into a readable format (e.g., dd-mm-yyyy)
     $formattedDob = date("m-d-Y", strtotime($row['dob']));
 
-    // HTML structure with added styles
+    // TODO: HTML structure with added styles
     $html = "
         <html>
             <head>
@@ -85,20 +85,20 @@ if (isset($_GET['user_id'])) {
         </html>
     ";
 
-    // Load HTML into Dompdf
+    // TODO: Load HTML into Dompdf
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait'); // Set paper size and orientation
 
-    // Render PDF (first pass)
+    // TODO: Render PDF (first pass)
     $dompdf->render();
 
-    // Create the folder if it doesn't exist
+    // TODO: Create the folder if it doesn't exist
     $folderPath = 'user_pdfs'; // Specify the folder name
     if (!file_exists($folderPath)) {
         mkdir($folderPath, 0777, true); // Create the folder with appropriate permissions
     }
 
-    // Save the PDF to the folder
+    // TODO: Save the PDF to the folder
     $pdfFilePath = $folderPath . "/user_$userId.pdf";
     $pdf = $dompdf->output(); // Get the output as PDF
     file_put_contents($pdfFilePath, $pdf); // Save the generated PDF to the folder

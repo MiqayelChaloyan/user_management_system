@@ -61,7 +61,7 @@ include 'includes/db.php';
                     <label class="form-check-label" for="gender-male">Male</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input type="radio" id="gender-all" name="gender" value="" class="form-check-input" checked>
+                    <input type="radio" id="gender-all" name="gender" value="all" class="form-check-input" checked>
                     <label class="form-check-label" for="gender-all">All</label>
                 </div>
             </div>
@@ -69,7 +69,7 @@ include 'includes/db.php';
         </div>
         <a href="generate_pdf.php" class="btn btn-success btn-md" id="generatePdfBtn">Generate PDF</a>
 
-        <table id="users" class="table table-bordered table-striped">
+        <table id="users" class="table table-bordered table-striped" style='width: 1200px'>
             <thead>
                 <tr>
                     <th></th>
@@ -111,7 +111,8 @@ include 'includes/db.php';
                                     <img
                                         src="uploads/<?php echo $row['file']; ?>"
                                         alt="User Photo"
-                                        style="width: 50px; height: 50px;">
+                                        style="width: 50px; height: 50px; cursor: pointer; object-fit: cover"
+                                        onclick="openSwal('uploads/<?php echo $row['file']; ?>')">
                                 <?php else: ?>
                                     No Image
                                 <?php endif; ?>
@@ -132,9 +133,6 @@ include 'includes/db.php';
                 endif; ?>
             </tbody>
         </table>
-
-
-
     </div>
 
     <!-- TODO: Context Menu -->
@@ -163,12 +161,22 @@ include 'includes/db.php';
     <script type='text/javascript' src='https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js'></script>
 
     <script>
+        function openSwal(imageUrl) {
+            Swal.fire({
+                imageUrl: imageUrl,
+                imageWidth: 400,
+                imageHeight: 400,
+                imageAlt: 'User Photo',
+                confirmButtonText: 'Close'
+            });
+        };
+
         function downloadPdf(button) {
             const userId = button.getAttribute('data-user-id');
 
             $.ajax({
                 url: `generate_user_pdf.php`,
-                method: 'GET',
+                method: 'POST',
                 data: {
                     user_id: userId
                 },
@@ -179,7 +187,7 @@ include 'includes/db.php';
                         if (data.status && data.file_path) {
                             Swal.fire({
                                 title: 'User PDF',
-                                html: `<iframe src="${data.file_path}" width="100%" height="400px" frameborder="0"></iframe>`,
+                                html: `<iframe src="${data.file_path}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="400px" frameborder="0"></iframe>`,
                                 width: '80%',
                                 confirmButtonText: 'Close',
                             });
@@ -206,7 +214,7 @@ include 'includes/db.php';
 
 
         $(document).ready(function() {
-            // Fetch data for the child row
+            // TODO: Fetch data for the child row
             function fetchChildRowData(userId, callback) {
                 $.ajax({
                     url: './process/get-user-details.php',
@@ -240,7 +248,7 @@ include 'includes/db.php';
                         render: function() {
                             return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
                         },
-                        width: "25px"
+                        width: "20px"
                     },
                     {
                         data: 'id'
@@ -338,24 +346,36 @@ include 'includes/db.php';
                 ],
                 order: [
                     [7, 'asc'],
+                    [8, 'gen'],
                 ]
             });
 
-            // Sort by Age when the checkbox is checked
+
+            // TODO: Sort by Age when the checkbox is checked
             $('#sortByAge').on('change', function() {
                 if ($(this).prop('checked')) {
                     table.order([7, 'asc']).draw();
                 }
             });
 
-            // Gender filter logic
+
+            // TODO: Gender filter logic
             $('input[name="gender"]').on('change', function() {
-                const selectedGender = $(this).val();
-                table.column(9).search(selectedGender).draw();
+                const selectedGender = $(this).val().toLowerCase();
+
+                if (selectedGender === 'all') {
+                    table.column(8).search('').draw(); // Clear the filter
+                } else {
+                    table.column(8).search(function(data, type, row) {
+                        // Normalize data and selected value to lowercase
+                        return data.toLowerCase() === selectedGender; // Ensure case-insensitive match
+                    }).draw(); // Apply the gender filter
+                }
             });
 
+
             function format(d) {
-                // Check if dob exists and parse it
+                // TODO: Check if dob exists and parse it
                 let date = d.dob ? new Date(d.dob) : null;
                 let formattedDate = date ? `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}` : 'N/A';
 
@@ -397,7 +417,7 @@ include 'includes/db.php';
 
 
             $('#generatePdfBtn').on('click', function() {
-                // Trigger the AJAX request to generate the PDF
+                // TODO: Trigger the AJAX request to generate the PDF
                 $.ajax({
                     url: 'generate_pdf.php',
                     method: 'POST',

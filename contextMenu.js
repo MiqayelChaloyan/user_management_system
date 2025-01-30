@@ -2,7 +2,8 @@ $(document).ready(function () {
     let selectedRow;
     let globalPermissions = null;
 
-    // Fetch global permissions
+
+    // TODO: Fetch global permissions
     $.ajax({
         type: 'POST',
         url: 'process/get-user-permissions.php',
@@ -19,7 +20,8 @@ $(document).ready(function () {
         }
     });
 
-    // Initialize context menu
+
+    // TODO: Initialize context menu
     $.contextMenu({
         selector: '#users tbody tr, #users_report tbody tr',
         callback: function (key) {
@@ -105,12 +107,14 @@ $(document).ready(function () {
         }
     });
 
-    // Store selected row for context menu (works for both #users and #users_report)
+
+    // TODO: Store selected row for context menu (works for both #users and #users_report)
     $('#users tbody, #users_report tbody').on('contextmenu', 'tr', function () {
         selectedRow = $(this);
     });
 
-    // Update and Remove Button Actions with Permissions (works for both #users and #users_report)
+
+    // TODO: Update and Remove Button Actions with Permissions (works for both #users and #users_report)
     $('#users tbody, #users_report tbody').on('click', '.update-btn', function (event) {
         event.preventDefault();
 
@@ -134,6 +138,7 @@ $(document).ready(function () {
         }
     });
 
+
     $('#users tbody').on('click', '.delete-btn', function (event) {
         event.preventDefault();
 
@@ -144,15 +149,15 @@ $(document).ready(function () {
 
         $(document).on('click', '.delete-user', function () {
             
-            const userId = $(this).data('id'); // Get the user ID from the button's data attribute
-            const selectedRow = $(this).closest('tr'); // Find the closest <tr> to the clicked button
+            const userId = $(this).data('id'); // TODO: Get the user ID from the button's data attribute
+            const selectedRow = $(this).closest('tr'); // TODO: Find the closest <tr> to the clicked button
 
-            // Locate the nested child table if it exists
+            // TODO: Locate the nested child table if it exists
             const selectedDetailsRow = selectedRow.next('tr').find('#details-user');
 
-            // Check global permissions
+            // TODO: Check global permissions
             if (globalPermissions.can_remove === 'Yes') {
-                // Show confirmation dialog using SweetAlert2
+                // TODO: Show confirmation dialog using SweetAlert2
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to undo this!",
@@ -164,7 +169,7 @@ $(document).ready(function () {
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Send AJAX request to delete the user
+                        // TODO: Send AJAX request to delete the user
                         $.ajax({
                             type: 'POST',
                             url: 'process/delete-user.php',
@@ -172,7 +177,7 @@ $(document).ready(function () {
                             dataType: 'json',
                             success: function (data) {
                                 if (data.status === 200) {
-                                    // Show success message and remove the row
+                                    // TODO: Show success message and remove the row
                                     Swal.fire({
                                         title: 'Deleted!',
                                         text: data.message,
@@ -181,27 +186,27 @@ $(document).ready(function () {
                                         timer: 1500,
                                         timerProgressBar: true
                                     }).then(() => {
-                                        // Check if child table exists and remove it
+                                        // TODO: Check if child table exists and remove it
                                         if (selectedDetailsRow.length) {
                                             selectedDetailsRow.remove();
                                         }
-                                        // Remove the parent row
+                                        // TODO: Remove the parent row
                                         selectedRow.remove();
                                     });
                                 } else {
-                                    // Show error message from server
+                                    // TODO: Show error message from server
                                     Swal.fire('Error!', data.message, 'error');
                                 }
                             },
                             error: function (xhr, status, error) {
-                                // Handle AJAX errors
+                                // TODO: Handle AJAX errors
                                 Swal.fire('Error!', 'There was an error deleting the user.', 'error');
                             }
                         });
                     }
                 });
             } else {
-                // Show warning if no permission to remove
+                // TODO: Show warning if no permission to remove
                 Swal.fire({
                     title: 'Warning',
                     text: 'No remove permission.',

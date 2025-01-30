@@ -70,7 +70,7 @@
 
     <script>
         $(document).ready(function() {
-            // Fetch and populate the regions dropdown
+            // TODO: Fetch and populate the regions dropdown
             $.ajax({
                 url: 'fetch-cities.php',
                 type: 'POST',
@@ -97,7 +97,8 @@
                 }
             });
 
-            // Fetch and populate the cities dropdown based on selected region name
+
+            // TODO: Fetch and populate the cities dropdown based on selected region name
             $('#region').on('change', function() {
                 const regionName = $(this).val();
 
@@ -137,9 +138,6 @@
             });
 
 
-
-
-
             // TODO: Update validation rules if more fields are added in the future
             $("#user_form").validate({
                 rules: {
@@ -164,20 +162,18 @@
             });
 
 
-
-
             function submitForm() {
                 NProgress.start();
 
-                let form = $("#user_form")[0]; // Get the form element
-                let formData = new FormData(form); // Create FormData object
+                let form = $("#user_form")[0]; // TODO: Get the form element
+                let formData = new FormData(form); // TODO: Create FormData object
 
                 $.ajax({
                     type: 'POST',
                     url: '../actions/create.php',
                     data: formData,
-                    contentType: false, // Prevent jQuery from overriding content type
-                    processData: false, // Prevent jQuery from converting FormData to string
+                    contentType: false, // TODO: Prevent jQuery from overriding content type
+                    processData: false, // TODO: Prevent jQuery from converting FormData to string
                     dataType: 'json',
                     success: function(data, textStatus, jqXHR) {
                         NProgress.done();

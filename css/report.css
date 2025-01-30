@@ -1,4 +1,4 @@
-/* Fullscreen Modal */
+/* TODO: Fullscreen Modal */
 .modal-fullscreen {
     max-width: 90%;
     width: 90%;
@@ -25,7 +25,7 @@
     width: 200px;
 }
 
-/* DataTable Export Buttons */
+/* TODO: DataTable Export Buttons */
 .dt-buttons .btn {
     font-size: 19px;
     padding: 10px;
@@ -36,7 +36,7 @@
     align-items: center;
 }
 
-/* Custom colors for each export button */
+/* TODO: Custom colors for each export button */
 .dt-buttons .btn.copy {
     color: #3b9f3b;
     /* Green for copy */

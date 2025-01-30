@@ -6,7 +6,7 @@ use Dompdf\Dompdf;
 
 $dompdf = new Dompdf();
 
-// Start of HTML table with embedded CSS
+// TODO: Start of HTML table with embedded CSS
 $html = '
 <!DOCTYPE html>
 <html>
@@ -61,7 +61,7 @@ $html = '
     </thead>
     <tbody>';
 
-// MySQL query to get user data
+// TODO: MySQL query to get user data
 $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, d.age, d.gender 
           FROM users u
           LEFT JOIN user_details d ON u.id = d.user_id";
@@ -82,15 +82,15 @@ if ($result && mysqli_num_rows($result) > 0):
     endwhile;
 endif;
 
-// End of HTML table
+// TODO: End of HTML table
 $html .= '</tbody></table>
 </body>
 </html>';
 
-$dompdf->loadHtml($html);  // Load the HTML content into Dompdf
-$dompdf->setPaper('A4', 'portrait'); // Set paper size and orientation
+$dompdf->loadHtml($html);  // TODO: Load the HTML content into Dompdf
+$dompdf->setPaper('A4', 'portrait'); // TODO: Set paper size and orientation
 
-$dompdf->render(); // Render the PDF
+$dompdf->render(); // TODO: Render the PDF
 
-$pdf = $dompdf->output(); // Get the output as PDF
-file_put_contents("newfilegen.pdf", $pdf); // Save the generated PDF to file
+$pdf = $dompdf->output(); // TODO: Get the output as PDF
+file_put_contents("newfilegen.pdf", $pdf); // TODO: Save the generated PDF to file

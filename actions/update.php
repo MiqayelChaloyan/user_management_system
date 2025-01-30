@@ -18,39 +18,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $city = $_POST['city'];
 
         $uploadDir = "../uploads/";
-        $fileName = NULL; // Default to NULL if no file is uploaded
 
-        // Query to get the old file name for the user
+        // TODO: Query to get the old file name for the user
         $query = "SELECT file FROM users WHERE id = $user_id";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_assoc($result);
 
         if ($row) {
-            $old_file_name = $row['file']; // Get the old file name
+            $old_file_name = $row['file']; // TODO: Get the old file name
         } else {
-            $old_file_name = NULL; // If no file, set to NULL
+            $old_file_name = NULL; // TODO: If no file, set to NULL
         }
 
-        // Check if a new image is uploaded
+        $fileName = $old_file_name; // TODO: Default to NULL if no file is uploaded
+
+        // TODO: Check if a new image is uploaded
         if (!empty($_FILES['image']['name'])) {
             $fileExt = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
             $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
             if (in_array($fileExt, $allowedTypes)) {
-                // Generate a unique filename for the new image
+                // TODO: Generate a unique filename for the new image
                 $fileName = uniqid("user_", true) . "." . $fileExt;
                 $targetFilePath = $uploadDir . $fileName;
 
-                // If there's an old file, delete it
+                // TODO: If there's an old file, delete it
                 if (!empty($old_file_name)) {
                     $current_file_path = $uploadDir . $old_file_name;
-                    // Check if the old file exists and delete it
+                    // TODO: Check if the old file exists and delete it
                     if (file_exists($current_file_path)) {
                         unlink($current_file_path); // Delete old file
                     }
                 }
 
-                // Move the uploaded file to the server
+                // TODO: Move the uploaded file to the server
                 if (!move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
                     $response = [
                         'status' => 500,
@@ -69,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        // Validate required fields
+        // TODO: Validate required fields
         if (empty($full_name) || empty($email) || empty($phone_number) || empty($region) || empty($city)) {
             $response = [
                 'status' => 400,
@@ -77,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ];
             http_response_code(400);
         } else {
-            // Update user information in the database
+            // TODO: Update user information in the database
             $query = "UPDATE users SET full_name = '$full_name', email = '$email', phone_number = '$phone_number', region = '$region', city = '$city', file = '$fileName' WHERE id = $user_id";
 
             if (mysqli_query($conn, $query)) {

@@ -14,7 +14,7 @@
     align-items: center;
 }
 
-/* Custom colors for each export button */
+/* TODO: Custom colors for each export button */
 .dt-buttons .btn.copy {
     color: #3b9f3b;
     /* Green for copy */
@@ -48,7 +48,7 @@
     outline: none;
 }
 
-/* Modal Close Button */
+/* TODO: Modal Close Button */
 .btn-close {
     font-size: 19px;
     padding: 10px;
@@ -60,16 +60,7 @@
     align-items: center;
 }
 
-/* Variant 2: Icon for expanding and collapsing details (plus and minus) */
-/* td.details-control {
-    background: url('https://infra.clarin.eu/content/Centre_Registry/libs/DataTables-1.10.6/examples/resources/details_open.png') no-repeat center center;
-    cursor: pointer;
-}
-
-tr.shown td.details-control {
-    background: url('https://infra.clarin.eu/content/Centre_Registry/libs/DataTables-1.10.6/examples/resources/details_close.png') no-repeat center center;
-} */
-
+/* TODO: Icon for expanding and collapsing details (plus and minus) */
 td.details-control {
     text-align: center;
     color: forestgreen;
