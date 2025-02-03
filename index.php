@@ -107,15 +107,21 @@ include 'includes/db.php';
                             <td><?php echo $row['age'] ?? 'N/A' ?></td>
                             <td><?php echo $row['gender'] ?? 'N/A' ?></td>
                             <td>
-                                <?php if (!empty($row['file'])): ?>
-                                    <img
-                                        src="uploads/<?php echo $row['file']; ?>"
-                                        alt="User Photo"
-                                        style="width: 50px; height: 50px; cursor: pointer; object-fit: cover"
-                                        onclick="openSwal('uploads/<?php echo $row['file']; ?>')">
-                                <?php else: ?>
-                                    No Image
-                                <?php endif; ?>
+                                <button
+                                    type="button"
+                                    class="btn p-0 border-0 bg-transparent shadow-none"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                    onclick="setModalImage('uploads/<?php echo $row['file']; ?>')">
+                                    <?php if (!empty($row['file'])): ?>
+                                        <img
+                                            src="uploads/<?php echo $row['file']; ?>"
+                                            alt="User Photo"
+                                            style="width: 50px; height: 50px; cursor: pointer; object-fit: cover;">
+                                    <?php else: ?>
+                                        No Image
+                                    <?php endif; ?>
+                                </button>
                             </td>
                             <td>
                                 <a href="process/update-user.php?id=<?php echo $row['id'] ?>" class="btn btn-primary btn-sm">
@@ -133,6 +139,49 @@ include 'includes/db.php';
                 endif; ?>
             </tbody>
         </table>
+
+
+        <!-- Modal Image-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-end">
+                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img
+                            id="modalImage"
+                            src=""
+                            alt="Preview"
+                            class="img-fluid"
+                            style="width: 300px; height: 300px; object-fit: cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal PDF -->
+        <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pdfModalLabel">User PDF</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- PDF -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 
     <!-- TODO: Context Menu -->
@@ -161,15 +210,10 @@ include 'includes/db.php';
     <script type='text/javascript' src='https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js'></script>
 
     <script>
-        function openSwal(imageUrl) {
-            Swal.fire({
-                imageUrl: imageUrl,
-                imageWidth: 400,
-                imageHeight: 400,
-                imageAlt: 'User Photo',
-                confirmButtonText: 'Close'
-            });
+        function setModalImage(imageSrc) {
+            document.getElementById("modalImage").src = imageSrc;
         };
+
 
         function downloadPdf(button) {
             const userId = button.getAttribute('data-user-id');
@@ -185,32 +229,29 @@ include 'includes/db.php';
                         const data = JSON.parse(response);
 
                         if (data.status && data.file_path) {
-                            Swal.fire({
-                                title: 'User PDF',
-                                html: `<iframe src="${data.file_path}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="400px" frameborder="0"></iframe>`,
-                                width: '80%',
-                                confirmButtonText: 'Close',
-                            });
+                            // Set the content of the modal with the iframe
+                            const modalContent = `<iframe src="${data.file_path}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="400px" frameborder="0" scrolling="no"></iframe>`;
+                            $('#pdfModal .modal-body').html(modalContent);
+
+                            // Show the modal
+                            $('#pdfModal').modal('show');
                         } else {
                             throw new Error(data.message || 'An error occurred.');
                         }
                     } catch (error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: error.message,
-                        });
+                        // Show error message in modal
+                        $('#pdfModal .modal-body').html(`<p class="text-danger">${error.message}</p>`);
+                        $('#pdfModal').modal('show');
                     }
                 },
                 error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to fetch the PDF file path.',
-                    });
+                    // Show error message in modal
+                    $('#pdfModal .modal-body').html('<p class="text-danger">Failed to fetch the PDF file path.</p>');
+                    $('#pdfModal').modal('show');
                 }
             });
         };
+
 
 
         $(document).ready(function() {
