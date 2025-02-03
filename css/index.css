@@ -61,7 +61,7 @@
 }
 
 /* TODO: Icon for expanding and collapsing details (plus and minus) */
-td.details-control {
+/* td.details-control {
     text-align: center;
     color: forestgreen;
     cursor: pointer;
@@ -75,3 +75,20 @@ tr.shown td.details-control {
 table.dataTable td.dt-control:before {
     display: none !important;
 }
+ */
+
+
+/* Initially, set the default icon to plus for collapsed rows */
+td.details-control {
+    background: url('http://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+    width: 20px; /* Set an appropriate width for the icon */
+    height: 20px; /* Set an appropriate height for the icon */
+}
+
+/* Change the icon to minus when the row is expanded */
+tr.shown td.details-control {
+    background: url('http://www.datatables.net/examples/resources/details_close.png') no-repeat center center;
+}
+
+

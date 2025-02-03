@@ -26,7 +26,7 @@ include 'includes/db.php';
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.dataTables.css"> -->
 
     <!-- TODO: Include Font Awesome for icons -->
-    <link rel="stylesheet" type="text/css" href="css/index.css?v=4.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -255,22 +255,6 @@ include 'includes/db.php';
 
 
         $(document).ready(function() {
-            // TODO: Fetch data for the child row
-            function fetchChildRowData(userId, callback) {
-                $.ajax({
-                    url: './process/get-user-details.php',
-                    method: 'GET',
-                    data: {
-                        user_id: userId
-                    },
-                    success: function(response) {
-                        callback(response);
-                    },
-                    error: function() {
-                        callback('Error fetching data');
-                    }
-                });
-            };
 
             const table = $('#users').DataTable({
                 stateSave: true,
@@ -282,14 +266,10 @@ include 'includes/db.php';
                 pageLength: 50,
                 lengthChange: true,
                 columns: [{
-                        className: 'dt-control',
+                        className: 'details-control',
                         orderable: false,
                         data: null,
                         defaultContent: '',
-                        render: function() {
-                            return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
-                        },
-                        width: "20px"
                     },
                     {
                         data: 'id'
@@ -322,28 +302,6 @@ include 'includes/db.php';
                         data: 'action'
                     }
                 ],
-                rowCallback: function(row, data) {
-                    $('td.dt-control', row).on('click', function() {
-                        var tr = $(this).closest('tr');
-                        var tdi = tr.find("i.fa");
-                        var row = table.row(tr);
-
-                        if (row.child.isShown()) {
-                            row.child.hide();
-                            tr.removeClass('shown');
-                            tdi.first().removeClass('fa-minus-square');
-                            tdi.first().addClass('fa-plus-square');
-                        } else {
-                            fetchChildRowData(data.id, function(response) {
-                                const childRowHtml = format(response);
-                                row.child(childRowHtml).show();
-                                tr.addClass('shown');
-                            });
-                            tdi.first().removeClass('fa-plus-square');
-                            tdi.first().addClass('fa-minus-square');
-                        }
-                    });
-                },
                 buttons: [{
                         extend: 'copy',
                         className: 'btn copy',
@@ -392,6 +350,80 @@ include 'includes/db.php';
             });
 
 
+            // TODO: This function is for handling Child Rows.
+            $('#users').on('click', 'td.details-control', function() {
+                let tr = $(this).closest('tr');
+                let row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    let userId = row.data().id;
+                    fetchChildRowData(userId, function(data) {
+                        row.child(formatChildRow(data)).show();
+                        tr.addClass('shown');
+                    });
+                }
+            });
+
+            $('#users').DataTable().rows().every(function() {
+                let tr = $(this.node());
+                let childValue = tr.data('child-value');
+                this.child(format(childValue)).show();
+                tr.addClass('shown');
+            });
+
+            // Function to fetch child row data
+            function fetchChildRowData(userId, callback) {
+                $.ajax({
+                    url: './process/get-user-details.php',
+                    method: 'GET',
+                    data: {
+                        user_id: userId
+                    },
+                    success: function(response) {
+                        callback(response);
+                    },
+                    error: function() {
+                        callback('Error fetching data');
+                    }
+                });
+            };
+
+            function formatChildRow(data) {
+                // TODO: Check if dob exists and parse it
+                let date = data.dob ? new Date(data.dob) : null;
+                let formattedDate = date ? `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}` : 'N/A';
+
+                return `
+                    <table class="table" id='details-user'>
+                        <tr>
+                            <td><strong>Date:</strong></td>
+                            <td>${formattedDate}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Age:</strong></td>
+                            <td>${data.age || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gender:</strong></td>
+                            <td>${data.gender || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Additional Info:</strong></td>
+                            <td>${data.info || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Job:</strong></td>
+                            <td>${data.job || 'N/A'}</td>
+                        </tr>
+                    </table>
+                `;
+            };
+            // End
+
+
             // TODO: Sort by Age when the checkbox is checked
             $('#sortByAge').on('change', function() {
                 if ($(this).prop('checked')) {
@@ -413,36 +445,6 @@ include 'includes/db.php';
                     }).draw(); // Apply the gender filter
                 }
             });
-
-
-            function format(d) {
-                // TODO: Check if dob exists and parse it
-                let date = d.dob ? new Date(d.dob) : null;
-                let formattedDate = date ? `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}` : 'N/A';
-
-                return `
-                        <table id='details-user' cellpadding="5" cellspacing="0" border="0" style="padding-left:50px; width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Age</th>
-                                    <th>Gender</th>
-                                    <th>Info</th>
-                                    <th>Job</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>${formattedDate}</td>
-                                    <td>${d.age || 'N/A'}</td>
-                                    <td>${d.gender || 'N/A'}</td>
-                                    <td>${d.info || 'N/A'}</td>
-                                    <td>${d.job || 'N/A'}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    `;
-            }
 
 
             // TODO: Prevent context menu from opening on the action buttons
