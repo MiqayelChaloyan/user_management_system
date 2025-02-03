@@ -187,7 +187,7 @@ if (isset($_GET['id'])) {
                             try {
                                 const data = JSON.parse(response);
                                 if (data.status === 200) {
-                                    let cityOptions = '<option value="" disabled>Select City</option>';
+                                    let cityOptions = '<option value="" disabled selected>Select City</option>';
                                     data.cities.forEach(city => {
                                         cityOptions += `<option value="${city.city}" ${city.city === '<?= $city ?>' ? 'selected' : ''}>${city.city}</option>`;
                                     });

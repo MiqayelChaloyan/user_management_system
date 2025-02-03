@@ -105,7 +105,7 @@
                 if (regionName) {
                     $('#city').prop('disabled', false).html('<option value="" disabled>Loading...</option>');
                     $.ajax({
-                        url: 'fetch-cities.php',
+                        url: './fetch-cities.php',
                         type: 'POST',
                         data: {
                             region: regionName
