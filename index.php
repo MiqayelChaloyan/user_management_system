@@ -372,12 +372,12 @@ include 'includes/db.php';
                 }
             });
 
-            $('#users').DataTable().rows().every(function() {
-                let tr = $(this.node());
-                let childValue = tr.data('child-value');
-                this.child(format(childValue)).show();
-                tr.addClass('shown');
-            });
+            // $('#users').DataTable().rows().every(function() {
+            //     let tr = $(this.node());
+            //     let childValue = tr.data('child-value');
+            //     this.child(formatChildRow(childValue)).show();
+            //     tr.addClass('shown');
+            // });
 
             // Function to fetch child row data
             function fetchChildRowData(userId, callback) {
@@ -440,6 +440,7 @@ include 'includes/db.php';
             // TODO: Gender filter logic
             $('input[name="gender"]').on('change', function() {
                 const selectedGender = $(this).val().toLowerCase();
+                console.log(selectedGender)
 
                 if (selectedGender === 'all') {
                     table.column(8).search('').draw(); // Clear the filter
@@ -450,6 +451,7 @@ include 'includes/db.php';
                     }).draw(); // Apply the gender filter
                 }
             });
+
 
 
             // TODO: Prevent context menu from opening on the action buttons
