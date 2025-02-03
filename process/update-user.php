@@ -17,6 +17,7 @@ if (isset($_GET['id'])) {
         $phone_number = $user['phone_number'];
         $region = $user['region'];
         $city = $user['city'];
+        $address = $user['address'];
         $file = $user['file'];
     } else {
         echo "User not found.";
@@ -65,6 +66,16 @@ if (isset($_GET['id'])) {
                         <select class="form-select" id="city" name="city">
                             <option value=<?= $city ?> selected><?= $city ?></option>
                         </select>
+                    </div>
+
+                    <div class="mb-3" id="address-field" style="display: <?= ($city === 'Vanadzor') ? 'block' : 'none'; ?>;">
+                        <label for="address" class="form-label">Address</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="address"
+                            value="<?= $address ?>"
+                            name="address">
                     </div>
 
                     <div class="mb-3">
@@ -143,6 +154,18 @@ if (isset($_GET['id'])) {
 
     <script>
         $(document).ready(function() {
+            document.getElementById('city').addEventListener('change', function() {
+                const city = this.value;
+                const addressField = document.getElementById('address-field');
+                const addressInput = document.getElementById('address');
+
+                if (city === 'Vanadzor') {
+                    addressField.style.display = 'block';
+                } else {
+                    addressField.style.display = 'none';
+                }
+            });
+
             // TODO: Fetch and populate the regions dropdown
             $.ajax({
                 url: './fetch-cities.php',
@@ -250,7 +273,6 @@ if (isset($_GET['id'])) {
 
                 // TODO: Append user_id to the FormData object using append() method
                 formData.append("user_id", userId);
-
 
                 $.ajax({
                     type: 'POST',

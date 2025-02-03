@@ -40,6 +40,11 @@
                         </select>
                     </div>
 
+                    <div class="mb-3" id="address-field" style="display: none;">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="address">
+                    </div>
+
                     <div class="mb-3">
                         <label for="full_name" class="form-label">Full Name</label>
                         <input type="text" class="form-control" id="full_name" name="full_name" required>
@@ -70,6 +75,19 @@
 
     <script>
         $(document).ready(function() {
+            document.getElementById('city').addEventListener('change', function() {
+                const city = this.value;
+                const addressField = document.getElementById('address-field');
+                const addressInput = document.getElementById('address');
+
+                if (city === 'Vanadzor') {
+                    addressField.style.display = 'block';
+                } else {
+                    addressField.style.display = 'none';
+                }
+            });
+
+
             // TODO: Fetch and populate the regions dropdown
             $.ajax({
                 url: 'fetch-cities.php',
@@ -156,7 +174,7 @@
                     },
                     city: {
                         required: true,
-                    },
+                    }
                 },
                 submitHandler: submitForm
             });
@@ -167,6 +185,8 @@
 
                 let form = $("#user_form")[0]; // TODO: Get the form element
                 let formData = new FormData(form); // TODO: Create FormData object
+
+                console.log(formData)
 
                 $.ajax({
                     type: 'POST',

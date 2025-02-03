@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone_number = trim($_POST['phone_number']);
     $region = trim($_POST['region']);
     $city = trim($_POST['city']);
+
+    $address = trim($_POST['address'] ?? ''); 
+    $address = !empty($address) ? $address : 'N / A';    
     
     $uploadDir = "../uploads/";
     $fileName = NULL;
@@ -46,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // TODO: Insert user into the database (with or without file)
-    $query = "INSERT INTO `users` (`full_name`, `email`, `phone_number`, `region`, `city`, `file`) 
-    VALUES ('$full_name', '$email', '$phone_number', '$region', '$city', '$fileName')";
+    $query = "INSERT INTO `users` (`full_name`, `email`, `phone_number`, `region`, `city`, `file`, `address`) 
+    VALUES ('$full_name', '$email', '$phone_number', '$region', '$city', '$fileName', '$address')";    
 
     if ($conn->query($query)) {
         $response = [

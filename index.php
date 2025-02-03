@@ -69,7 +69,7 @@ include 'includes/db.php';
         </div>
         <a href="generate_pdf.php" class="btn btn-success btn-md" id="generatePdfBtn">Generate PDF</a>
 
-        <table id="users" class="table table-bordered table-striped" style='width: 1200px'>
+        <table id="users" class="table table-bordered table-striped" style='width: 1300px'>
             <thead>
                 <tr>
                     <th></th>
@@ -81,13 +81,14 @@ include 'includes/db.php';
                     <th>City</th>
                     <th>Age</th>
                     <th>Gender</th>
+                    <th>Address</th>
                     <th>Image</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, u.file, d.age, d.gender
+                $query = "SELECT u.id, u.full_name, u.email, u.phone_number, u.region, u.city, u.file, u.address, d.age, d.gender
         FROM users u
         LEFT JOIN user_details d ON u.id = d.user_id";
 
@@ -104,8 +105,9 @@ include 'includes/db.php';
                             <td><?php echo $row['phone_number'] ?></td>
                             <td><?php echo $row['region'] ?></td>
                             <td><?php echo $row['city'] ?></td>
-                            <td><?php echo $row['age'] ?? 'N/A' ?></td>
-                            <td><?php echo $row['gender'] ?? 'N/A' ?></td>
+                            <td><?php echo $row['age'] ?? 'N / A' ?></td>
+                            <td><?php echo $row['gender'] ?? 'N / A' ?></td>
+                            <td><?php echo $row['address'] ?></td>
                             <td>
                                 <button
                                     type="button"
@@ -296,6 +298,9 @@ include 'includes/db.php';
                         data: 'gender'
                     },
                     {
+                        address: 'address'
+                    },
+                    {
                         data: 'file'
                     },
                     {
@@ -394,7 +399,7 @@ include 'includes/db.php';
             function formatChildRow(data) {
                 // TODO: Check if dob exists and parse it
                 let date = data.dob ? new Date(data.dob) : null;
-                let formattedDate = date ? `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}` : 'N/A';
+                let formattedDate = date ? `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}` : 'N / A';
 
                 return `
                     <table class="table" id='details-user'>
@@ -404,19 +409,19 @@ include 'includes/db.php';
                         </tr>
                         <tr>
                             <td><strong>Age:</strong></td>
-                            <td>${data.age || 'N/A'}</td>
+                            <td>${data.age || 'N / A'}</td>
                         </tr>
                         <tr>
                             <td><strong>Gender:</strong></td>
-                            <td>${data.gender || 'N/A'}</td>
+                            <td>${data.gender || 'N / A'}</td>
                         </tr>
                         <tr>
                             <td><strong>Additional Info:</strong></td>
-                            <td>${data.info || 'N/A'}</td>
+                            <td>${data.info || 'N / A'}</td>
                         </tr>
                         <tr>
                             <td><strong>Job:</strong></td>
-                            <td>${data.job || 'N/A'}</td>
+                            <td>${data.job || 'N / A'}</td>
                         </tr>
                     </table>
                 `;

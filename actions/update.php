@@ -17,6 +17,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $region = $_POST['region'];
         $city = $_POST['city'];
 
+        $address = trim($_POST['address'] ?? '');
+
+        if ($city !== 'Vanadzor') {
+            $address = 'N / A';
+        }
+
+        $address = !empty($address) ? $address : 'N / A';
+
+
         $uploadDir = "../uploads/";
 
         // TODO: Query to get the old file name for the user
@@ -79,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             http_response_code(400);
         } else {
             // TODO: Update user information in the database
-            $query = "UPDATE users SET full_name = '$full_name', email = '$email', phone_number = '$phone_number', region = '$region', city = '$city', file = '$fileName' WHERE id = $user_id";
+            $query = "UPDATE users SET full_name = '$full_name', email = '$email', phone_number = '$phone_number', region = '$region', city = '$city', file = '$fileName', address='$address' WHERE id = $user_id";
 
             if (mysqli_query($conn, $query)) {
                 $response = [
