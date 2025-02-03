@@ -295,9 +295,9 @@ if (isset($_GET['id'])) {
                                 showConfirmButton: false,
                                 timer: 1500
                             }).then(() => {
-                                setTimeout(function() {
-                                    window.location.href = "../index.php";
-                                }, 1500);
+                                // setTimeout(function() {
+                                //     window.location.href = "../index.php";
+                                // }, 1500);
                             });
                         } else {
                             Swal.fire({
@@ -307,9 +307,9 @@ if (isset($_GET['id'])) {
                                 showConfirmButton: false,
                                 timer: 1500
                             }).then(() => {
-                                setTimeout(function() {
-                                    window.location.href = "../index.php";
-                                }, 1500);
+                                // setTimeout(function() {
+                                //     window.location.href = "../index.php";
+                                // }, 1500);
                             });
                         }
                     },

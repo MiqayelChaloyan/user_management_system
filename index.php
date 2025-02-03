@@ -92,12 +92,27 @@ include 'includes/db.php';
         FROM users u
         LEFT JOIN user_details d ON u.id = d.user_id";
 
+
                 $result = mysqli_query($conn, $query);
 
                 if ($result && mysqli_num_rows($result) > 0):
                     while ($row = mysqli_fetch_assoc($result)):
+
+                        $row_id = $row['id'];
+                        $queryDetails = "SELECT * FROM `user_details` WHERE `user_id` = '$row_id'";
+                        $resultDetails = mysqli_query($conn, $queryDetails);
+
+                        $ff = '';
+                        while ($rowDetails = mysqli_fetch_assoc($resultDetails)) {
+                            $ff = "
+                          <tr>
+                            <td>" . $rowDetails['age'] . "</td>
+                            <td>" . $rowDetails['gender'] . "</td>
+                          </tr>
+                        ";
+                        };
                 ?>
-                        <tr data-id="<?php echo $row['id'] ?>">
+                        <tr data-id="<?php echo $row['id'] ?>" data-child-value="<?php echo $ff ?>">
                             <td class="details-control"></td>
                             <td><?php echo $row['id'] ?></td>
                             <td><?php echo $row['full_name'] ?></td>
@@ -230,7 +245,7 @@ include 'includes/db.php';
                     try {
                         const data = JSON.parse(response);
 
-                        if (data.status && data.file_path) {
+                        if (data.status == 'success' && data.file_path) {
                             // Set the content of the modal with the iframe
                             const modalContent = `<iframe src="${data.file_path}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="400px" frameborder="0" scrolling="no"></iframe>`;
                             $('#pdfModal .modal-body').html(modalContent);
@@ -254,7 +269,21 @@ include 'includes/db.php';
             });
         };
 
-
+        function format(data) {
+            return `
+                    <table class="table" id='details-user'>
+                    <thead>
+                        <tr>
+                            <th>Age</th>
+                            <th>Gender</th>
+                        </tr>
+                    </thead>
+                     <tbody>
+                        ${data}
+                     </tbody>
+                    </table>
+                `;
+        };
 
         $(document).ready(function() {
 
@@ -267,46 +296,6 @@ include 'includes/db.php';
                 info: true,
                 pageLength: 50,
                 lengthChange: true,
-                columns: [{
-                        className: 'details-control',
-                        orderable: false,
-                        data: null,
-                        defaultContent: '',
-                    },
-                    {
-                        data: 'id'
-                    },
-                    {
-                        data: 'full_name'
-                    },
-                    {
-                        data: 'email'
-                    },
-                    {
-                        data: 'phone_number'
-                    },
-                    {
-                        data: 'region'
-                    },
-                    {
-                        data: 'city'
-                    },
-                    {
-                        data: 'age'
-                    },
-                    {
-                        data: 'gender'
-                    },
-                    {
-                        address: 'address'
-                    },
-                    {
-                        data: 'file'
-                    },
-                    {
-                        data: 'action'
-                    }
-                ],
                 buttons: [{
                         extend: 'copy',
                         className: 'btn copy',
@@ -357,76 +346,20 @@ include 'includes/db.php';
 
             // TODO: This function is for handling Child Rows.
             $('#users').on('click', 'td.details-control', function() {
-                let tr = $(this).closest('tr');
-                let row = table.row(tr);
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
 
                 if (row.child.isShown()) {
+                    // This row is already open - close it
                     row.child.hide();
                     tr.removeClass('shown');
                 } else {
-                    let userId = row.data().id;
-                    fetchChildRowData(userId, function(data) {
-                        row.child(formatChildRow(data)).show();
-                        tr.addClass('shown');
-                    });
+                    // Open this row
+                    row.child(format(tr.data('child-value'))).show();
+                    tr.addClass('shown');
                 }
             });
 
-            // $('#users').DataTable().rows().every(function() {
-            //     let tr = $(this.node());
-            //     let childValue = tr.data('child-value');
-            //     this.child(formatChildRow(childValue)).show();
-            //     tr.addClass('shown');
-            // });
-
-            // Function to fetch child row data
-            function fetchChildRowData(userId, callback) {
-                $.ajax({
-                    url: './process/get-user-details.php',
-                    method: 'GET',
-                    data: {
-                        user_id: userId
-                    },
-                    success: function(response) {
-                        callback(response);
-                    },
-                    error: function() {
-                        callback('Error fetching data');
-                    }
-                });
-            };
-
-            function formatChildRow(data) {
-                // TODO: Check if dob exists and parse it
-                let date = data.dob ? new Date(data.dob) : null;
-                let formattedDate = date ? `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}` : 'N / A';
-
-                return `
-                    <table class="table" id='details-user'>
-                        <tr>
-                            <td><strong>Date:</strong></td>
-                            <td>${formattedDate}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Age:</strong></td>
-                            <td>${data.age || 'N / A'}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Gender:</strong></td>
-                            <td>${data.gender || 'N / A'}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Additional Info:</strong></td>
-                            <td>${data.info || 'N / A'}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Job:</strong></td>
-                            <td>${data.job || 'N / A'}</td>
-                        </tr>
-                    </table>
-                `;
-            };
-            // End
 
 
             // TODO: Sort by Age when the checkbox is checked
